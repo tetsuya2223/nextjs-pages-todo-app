@@ -59,6 +59,6 @@
 - スタイリング
   - 未定
 - 状態管理
-  - ReactHooks
+  - ReactHooks(useState, useContext)
 - データ保存
   - ローカルストレージ（仮）
