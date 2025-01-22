@@ -10,8 +10,7 @@ export default function Home() {
   };
 
   const addTodos = () => {
-    const newTodos = [...todos];
-    newTodos.push(text);
+    const newTodos = [...todos, text];
     setTodos(newTodos);
     setText("");
   };
