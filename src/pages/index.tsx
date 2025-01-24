@@ -16,8 +16,7 @@ export default function Home() {
   };
 
   const deleteTodos = (index: number) => {
-    const newTodos = [...todos];
-    newTodos.splice(index, 1);
+    const newTodos = todos.filter((_, i) => i !== index);
     setTodos(newTodos);
   };
 
