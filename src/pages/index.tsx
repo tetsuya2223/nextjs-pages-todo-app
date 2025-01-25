@@ -37,9 +37,9 @@ export default function Home() {
         <button onClick={addTodos}>追加</button>
       </div>
       <div>
-        {todos.map((todo, index) => (
+        {todos.map((todo, id) => (
           <li
-            key={index}
+            key={id}
             style={{
               display: "flex",
             }}
