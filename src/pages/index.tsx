@@ -1,14 +1,13 @@
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
-type todo = {
+type Todo = {
   id: string;
   text: string;
 };
 
 export default function Home() {
   const [text, setText] = useState("");
-  const [todos, setTodos] = useState<todo[]>([]);
+  const [todos, setTodos] = useState<Todo[]>([]);
 
   const changeText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -16,8 +15,9 @@ export default function Home() {
   };
 
   const addTodos = () => {
-    const newTodos: todo = {
-      id: uuidv4(),
+    let uuid = self.crypto.randomUUID();
+    const newTodos: Todo = {
+      id: uuid,
       text: text,
     };
     setTodos([...todos, newTodos]);
@@ -37,9 +37,9 @@ export default function Home() {
         <button onClick={addTodos}>追加</button>
       </div>
       <div>
-        {todos.map((todo, id) => (
+        {todos.map((todo) => (
           <li
-            key={id}
+            key={todo.id}
             style={{
               display: "flex",
             }}
