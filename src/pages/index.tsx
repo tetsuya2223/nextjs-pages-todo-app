@@ -1,8 +1,14 @@
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
+type todo = {
+  id: string;
+  text: string;
+};
 
 export default function Home() {
   const [text, setText] = useState("");
-  const [todos, setTodos] = useState<string[]>([]);
+  const [todos, setTodos] = useState<todo[]>([]);
 
   const changeText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -10,13 +16,17 @@ export default function Home() {
   };
 
   const addTodos = () => {
-    const newTodos = [...todos, text];
-    setTodos(newTodos);
+    const newTodos: todo = {
+      id: uuidv4(),
+      text: text,
+    };
+    setTodos([...todos, newTodos]);
     setText("");
+    console.log(newTodos);
   };
 
-  const deleteTodos = (index: number) => {
-    const newTodos = todos.filter((_, i) => i !== index);
+  const deleteTodos = (id: string) => {
+    const newTodos = todos.filter((todo) => todo.id !== id);
     setTodos(newTodos);
   };
 
@@ -29,13 +39,13 @@ export default function Home() {
       <div>
         {todos.map((todo, index) => (
           <li
-            key={todo}
+            key={index}
             style={{
               display: "flex",
             }}
           >
-            <p>{todo}</p>
-            <button onClick={() => deleteTodos(index)}>完了</button>
+            <p>{todo.text}</p>
+            <button onClick={() => deleteTodos(todo.id)}>完了</button>
           </li>
         ))}
       </div>
