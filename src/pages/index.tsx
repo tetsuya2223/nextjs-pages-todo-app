@@ -15,7 +15,7 @@ export default function Home() {
   };
 
   const addTodos = () => {
-    let uuid = self.crypto.randomUUID();
+    const uuid = self.crypto.randomUUID();
     const newTodos: Todo = {
       id: uuid,
       text: text,
