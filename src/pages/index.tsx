@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export default function Home() {
-  const [text, setText] = useState<string>("");
+  const [text, setText] = useState("");
   const [todos, setTodos] = useState<string[]>([]);
 
   const changeText = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -15,6 +15,11 @@ export default function Home() {
     setText("");
   };
 
+  const deleteTodos = (index: number) => {
+    const newTodos = todos.filter((_, i) => i !== index);
+    setTodos(newTodos);
+  };
+
   return (
     <>
       <div>
@@ -22,7 +27,7 @@ export default function Home() {
         <button onClick={addTodos}>追加</button>
       </div>
       <div>
-        {todos.map((todo) => (
+        {todos.map((todo, index) => (
           <li
             key={todo}
             style={{
@@ -30,7 +35,7 @@ export default function Home() {
             }}
           >
             <p>{todo}</p>
-            <button>完了</button>
+            <button onClick={() => deleteTodos(index)}>完了</button>
           </li>
         ))}
       </div>
