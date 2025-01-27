@@ -56,7 +56,7 @@ export default function Home() {
               <li className={styles.listItem} key={todo.id}>
                 <p>{todo.text}</p>
                 <button
-                  className={styles.deletButton}
+                  className={styles.deleteButton}
                   onClick={() => deleteTodos(todo.id)}
                 >
                   削除
