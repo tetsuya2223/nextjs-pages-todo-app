@@ -30,6 +30,12 @@ export default function Home() {
     console.log(newTodos);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === "Enter") {
+      addTodos();
+    }
+  };
+
   const deleteTodos = (id: string) => {
     const newTodos = todos.filter((todo) => todo.id !== id);
     setTodos(newTodos);
@@ -49,6 +55,7 @@ export default function Home() {
               value={text}
               onChange={changeText}
               id="task-input"
+              onKeyDown={handleKeyDown}
             />
             <button
               type="button"
