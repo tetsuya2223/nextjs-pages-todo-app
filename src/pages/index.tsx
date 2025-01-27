@@ -21,7 +21,7 @@ export default function Home() {
       id: uuid,
       text: text,
     };
-    setTodos([...todos, newTodos]);
+    setTodos([newTodos, ...todos]);
     setText("");
     console.log(newTodos);
   };
