@@ -1,3 +1,4 @@
+import styles from "../styles/Home.module.css";
 import { useState } from "react";
 
 type Todo = {
@@ -32,22 +33,43 @@ export default function Home() {
 
   return (
     <>
-      <div>
-        <input type="text" value={text} onChange={changeText} />
-        <button onClick={addTodos}>追加</button>
-      </div>
-      <div>
-        {todos.map((todo) => (
-          <li
-            key={todo.id}
-            style={{
-              display: "flex",
-            }}
-          >
-            <p>{todo.text}</p>
-            <button onClick={() => deleteTodos(todo.id)}>完了</button>
-          </li>
-        ))}
+      <h1 className={styles.title}>TODOリスト</h1>
+      <div className={styles.todoContainer}>
+        <div className={styles.inputArea}>
+          <div className={styles.taskForm}>
+            <label htmlFor="task-input">タスク:</label>
+            <input
+              className={styles.input}
+              type="text"
+              value={text}
+              onChange={changeText}
+              id="task-input"
+            />
+            <button
+              type="button"
+              className={styles.addButton}
+              onClick={addTodos}
+            >
+              登録
+            </button>
+          </div>
+        </div>
+        <div>
+          <ul className={styles.taskList}>
+            {todos.map((todo) => (
+              <li className={styles.listItem} key={todo.id}>
+                <p>{todo.text}</p>
+                <button
+                  type="button"
+                  className={styles.deleteButton}
+                  onClick={() => deleteTodos(todo.id)}
+                >
+                  削除
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </>
   );
