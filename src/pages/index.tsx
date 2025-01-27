@@ -45,7 +45,11 @@ export default function Home() {
               onChange={changeText}
               id="task-input"
             />
-            <button className={styles.addButton} onClick={addTodos}>
+            <button
+              type="button"
+              className={styles.addButton}
+              onClick={addTodos}
+            >
               登録
             </button>
           </div>
