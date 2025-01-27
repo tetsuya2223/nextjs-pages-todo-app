@@ -16,6 +16,10 @@ export default function Home() {
   };
 
   const addTodos = () => {
+    if (!text.trim()) {
+      alert("タスクを入力してください");
+      return;
+    }
     const uuid = self.crypto.randomUUID();
     const newTodos: Todo = {
       id: uuid,
@@ -41,6 +45,7 @@ export default function Home() {
             <input
               className={styles.input}
               type="text"
+              placeholder={"タスクを入力"}
               value={text}
               onChange={changeText}
               id="task-input"
