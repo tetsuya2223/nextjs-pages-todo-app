@@ -30,7 +30,7 @@ export default function Home() {
     console.log(newTodos);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       addTodos();
     }
