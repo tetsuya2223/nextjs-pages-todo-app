@@ -16,6 +16,10 @@ export default function Home() {
   };
 
   const addTodos = () => {
+    if (!text.trim()) {
+      alert("タスクを入力してください");
+      return;
+    }
     const uuid = self.crypto.randomUUID();
     const newTodos: Todo = {
       id: uuid,
@@ -24,6 +28,10 @@ export default function Home() {
     setTodos([newTodos, ...todos]);
     setText("");
     console.log(newTodos);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
   };
 
   const deleteTodos = (id: string) => {
@@ -35,25 +43,26 @@ export default function Home() {
     <>
       <h1 className={styles.title}>TODOリスト</h1>
       <div className={styles.todoContainer}>
-        <div className={styles.inputArea}>
+        <form className={styles.inputArea} onSubmit={handleSubmit}>
           <div className={styles.taskForm}>
             <label htmlFor="task-input">タスク:</label>
             <input
               className={styles.input}
               type="text"
+              placeholder={"タスクを入力"}
               value={text}
               onChange={changeText}
               id="task-input"
             />
             <button
-              type="button"
+              type="submit"
               className={styles.addButton}
               onClick={addTodos}
             >
               登録
             </button>
           </div>
-        </div>
+        </form>
         <div>
           <ul className={styles.taskList}>
             {todos.map((todo) => (
