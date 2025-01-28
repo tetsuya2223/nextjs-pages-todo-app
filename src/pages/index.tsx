@@ -30,10 +30,8 @@ export default function Home() {
     console.log(newTodos);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      addTodos();
-    }
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
   };
 
   const deleteTodos = (id: string) => {
@@ -45,7 +43,7 @@ export default function Home() {
     <>
       <h1 className={styles.title}>TODOリスト</h1>
       <div className={styles.todoContainer}>
-        <div className={styles.inputArea}>
+        <form className={styles.inputArea} onSubmit={handleSubmit}>
           <div className={styles.taskForm}>
             <label htmlFor="task-input">タスク:</label>
             <input
@@ -55,17 +53,16 @@ export default function Home() {
               value={text}
               onChange={changeText}
               id="task-input"
-              onKeyDown={handleKeyDown}
             />
             <button
-              type="button"
+              type="submit"
               className={styles.addButton}
               onClick={addTodos}
             >
               登録
             </button>
           </div>
-        </div>
+        </form>
         <div>
           <ul className={styles.taskList}>
             {todos.map((todo) => (
