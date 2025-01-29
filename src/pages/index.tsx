@@ -67,7 +67,7 @@ export default function Home() {
           <ul className={styles.taskList}>
             {todos.map((todo) => (
               <li className={styles.listItem} key={todo.id}>
-                <p>{todo.text}</p>
+                <p className={styles.listItemText}>{todo.text}</p>
                 <button
                   type="button"
                   className={styles.deleteButton}

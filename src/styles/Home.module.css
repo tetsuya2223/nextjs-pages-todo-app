@@ -58,6 +58,13 @@
   border: 1px solid #ddd;
   border-radius: 4px;
 }
+.listItemText {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .deleteButton {
   padding: 5px 10px;
   font-size: 14px;
