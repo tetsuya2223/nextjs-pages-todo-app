@@ -4,6 +4,7 @@ import { useState } from "react";
 type Todo = {
   id: string;
   text: string;
+  isCompleted: boolean;
 };
 
 export default function Home() {
@@ -24,10 +25,17 @@ export default function Home() {
     const newTodos: Todo = {
       id: uuid,
       text: text,
+      isCompleted: false,
     };
     setTodos([newTodos, ...todos]);
     setText("");
     console.log(newTodos);
+  };
+
+  const toggleCompleted = (id: string, isCompleted: boolean) => {
+    const todoItem = todos.find((item: Todo) => item.id === id);
+    const newTodoItem: Todo = { ...todoItem!, isCompleted: !isCompleted };
+    setTodos(todos.map((item) => (item.id === id ? newTodoItem : item)));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -56,7 +64,7 @@ export default function Home() {
             />
             <button
               type="submit"
-              className={styles.addButton}
+              className={`${styles.button} ${styles.addButton}`}
               onClick={addTodos}
             >
               登録
@@ -66,11 +74,24 @@ export default function Home() {
         <div>
           <ul className={styles.taskList}>
             {todos.map((todo) => (
-              <li className={styles.listItem} key={todo.id}>
-                <p className={styles.listItemText}>{todo.text}</p>
+              <li className={styles.listItems} key={todo.id}>
+                <p
+                  className={`${styles.listItemText} ${styles.listitem} ${
+                    todo.isCompleted ? styles.listItemTextComped : ""
+                  }`}
+                >
+                  {todo.text}
+                </p>
                 <button
                   type="button"
-                  className={styles.deleteButton}
+                  className={`${styles.button} ${styles.completeButton} ${styles.listitem}`}
+                  onClick={() => toggleCompleted(todo.id, todo.isCompleted)}
+                >
+                  完了
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.button} ${styles.deleteButton} ${styles.listitem}`}
                   onClick={() => deleteTodos(todo.id)}
                 >
                   削除
