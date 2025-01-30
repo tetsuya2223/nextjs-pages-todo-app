@@ -34,7 +34,10 @@ export default function Home() {
 
   const toggleCompleted = (id: string, isCompleted: boolean) => {
     const todoItem = todos.find((item: Todo) => item.id === id);
-    const newTodoItem: Todo = { ...todoItem!, isCompleted: !isCompleted };
+    if (!todoItem) {
+      return;
+    }
+    const newTodoItem: Todo = { ...todoItem, isCompleted: !isCompleted };
     setTodos(todos.map((item) => (item.id === id ? newTodoItem : item)));
   };
 
