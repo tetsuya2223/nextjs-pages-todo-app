@@ -4,16 +4,21 @@ import { useState } from "react";
 type Todo = {
   id: string;
   text: string;
+  dueDate: string;
   isCompleted: boolean;
 };
 
 export default function Home() {
   const [text, setText] = useState("");
+  const [dueDate, setDueDate] = useState("");
   const [todos, setTodos] = useState<Todo[]>([]);
 
   const changeText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
-    console.log(text);
+  };
+
+  const assignDueDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDueDate(e.target.value);
   };
 
   const addTodos = () => {
@@ -25,10 +30,12 @@ export default function Home() {
     const newTodos: Todo = {
       id: uuid,
       text: text,
+      dueDate: dueDate,
       isCompleted: false,
     };
     setTodos([newTodos, ...todos]);
     setText("");
+    setDueDate("");
     console.log(newTodos);
   };
 
@@ -65,6 +72,8 @@ export default function Home() {
               onChange={changeText}
               id="task-input"
             />
+            <p>締め切り日：</p>
+            <input type="date" value={dueDate} onChange={assignDueDate} />
             <button
               type="submit"
               className={`${styles.button} ${styles.addButton}`}
@@ -85,7 +94,9 @@ export default function Home() {
                 >
                   {todo.text}
                 </p>
+                {/* 今後、リストの表示方法は修正します。 */}
                 <div className={styles.btnContainer}>
+                  <p className={styles.inputDate}>{todo.dueDate.slice(5)}</p>
                   <button
                     type="button"
                     className={`${styles.button} ${styles.completeButton} ${styles.listitem}`}
