@@ -85,20 +85,22 @@ export default function Home() {
                 >
                   {todo.text}
                 </p>
-                <button
-                  type="button"
-                  className={`${styles.button} ${styles.completeButton} ${styles.listitem}`}
-                  onClick={() => toggleCompleted(todo.id, todo.isCompleted)}
-                >
-                  完了
-                </button>
-                <button
-                  type="button"
-                  className={`${styles.button} ${styles.deleteButton} ${styles.listitem}`}
-                  onClick={() => deleteTodos(todo.id)}
-                >
-                  削除
-                </button>
+                <div className={styles.btnContainer}>
+                  <button
+                    type="button"
+                    className={`${styles.button} ${styles.completeButton} ${styles.listitem}`}
+                    onClick={() => toggleCompleted(todo.id, todo.isCompleted)}
+                  >
+                    完了
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.button} ${styles.deleteButton} ${styles.listitem}`}
+                    onClick={() => deleteTodos(todo.id)}
+                  >
+                    削除
+                  </button>
+                </div>
               </li>
             ))}
           </ul>

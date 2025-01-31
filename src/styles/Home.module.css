@@ -57,17 +57,13 @@
 
 .listItems {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   padding: 10px 15px;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 4px;
   gap: 8px;
-}
-
-.listitem:first-child {
-  margin-right: auto;
 }
 
 .listItemText {
@@ -80,6 +76,12 @@
 
 .listItemTextComped {
   text-decoration: line-through;
+}
+
+.btnContainer {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
 }
 
 .completeButton {
