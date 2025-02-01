@@ -1,5 +1,5 @@
 import styles from "../styles/Home.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatInTimeZone } from "date-fns-tz";
 
 type Todo = {
@@ -10,9 +10,21 @@ type Todo = {
 };
 
 export default function Home() {
+  console.log("ホーム１");
   const [text, setText] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [todos, setTodos] = useState<Todo[]>([]);
+
+  useEffect(() => {
+    const saveTodos = localStorage.getItem("todoArray");
+    if (saveTodos) {
+      setTodos(JSON.parse(saveTodos));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("todoArray", JSON.stringify(todos));
+  }, [todos]);
 
   const changeText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -36,6 +48,7 @@ export default function Home() {
         : "",
       isCompleted: false,
     };
+
     setTodos([newTodos, ...todos]);
     setText("");
     setDueDate("");
