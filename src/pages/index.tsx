@@ -1,12 +1,11 @@
 import styles from "../styles/Home.module.css";
 import { useState } from "react";
-import { parseISO } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 
 type Todo = {
   id: string;
   text: string;
-  dueDate: Date;
+  dueDate: string;
   isCompleted: boolean;
 };
 
@@ -32,7 +31,9 @@ export default function Home() {
     const newTodos: Todo = {
       id: uuid,
       text: text,
-      dueDate: parseISO(dueDate),
+      dueDate: dueDate
+        ? formatInTimeZone(dueDate, "Asia/Tokyo", "yyyy/MM/dd")
+        : "",
       isCompleted: false,
     };
     setTodos([newTodos, ...todos]);
@@ -98,9 +99,7 @@ export default function Home() {
                 </p>
                 {/* 今後、リストの表示方法は修正します。 */}
                 <div className={styles.btnContainer}>
-                  <p className={styles.inputDate}>
-                    {formatInTimeZone(todo.dueDate, "Asia/Tokyo", "yyyy/MM/dd")}
-                  </p>
+                  <p className={styles.inputDate}>{todo.dueDate}</p>
                   <button
                     type="button"
                     className={`${styles.button} ${styles.completeButton} ${styles.listitem}`}
