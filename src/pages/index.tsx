@@ -10,7 +10,6 @@ type Todo = {
 };
 
 export default function Home() {
-  console.log("ホーム１");
   const [text, setText] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [todos, setTodos] = useState<Todo[]>([]);
