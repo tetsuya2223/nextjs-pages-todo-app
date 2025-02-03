@@ -21,10 +21,6 @@ export default function Home() {
     }
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("todoArray", JSON.stringify(todos));
-  }, [todos]);
-
   const changeText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
   };
@@ -48,10 +44,13 @@ export default function Home() {
       isCompleted: false,
     };
 
-    setTodos([newTodos, ...todos]);
+    const newTodoArray = [newTodos, ...todos];
+
+    setTodos(newTodoArray);
+    localStorage.setItem("todoArray", JSON.stringify(newTodoArray));
+
     setText("");
     setDueDate("");
-    console.log(newTodos);
   };
 
   const toggleCompleted = (id: string, isCompleted: boolean) => {
