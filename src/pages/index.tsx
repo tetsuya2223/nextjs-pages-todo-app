@@ -1,8 +1,9 @@
 import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import { formatInTimeZone } from "date-fns-tz";
+import Link from "next/link";
 
-type Todo = {
+export type Todo = {
   id: string;
   text: string;
   dueDate: string;
@@ -69,6 +70,7 @@ export default function Home() {
   const deleteTodos = (id: string) => {
     const newTodos = todos.filter((todo) => todo.id !== id);
     setTodos(newTodos);
+    localStorage.setItem("todoArray", JSON.stringify(newTodos));
   };
 
   return (
@@ -101,13 +103,15 @@ export default function Home() {
           <ul className={styles.taskList}>
             {todos.map((todo) => (
               <li className={styles.listItems} key={todo.id}>
-                <p
-                  className={`${styles.listItemText} ${styles.listitem} ${
-                    todo.isCompleted ? styles.listItemTextComped : ""
-                  }`}
-                >
-                  {todo.text}
-                </p>
+                <Link href={`/${todo.id}`}>
+                  <p
+                    className={`${styles.listItemText} ${styles.listitem} ${
+                      todo.isCompleted ? styles.listItemTextComped : ""
+                    }`}
+                  >
+                    {todo.text}
+                  </p>
+                </Link>
                 {/* 今後、リストの表示方法は修正します。 */}
                 <div className={styles.btnContainer}>
                   <p className={styles.inputDate}>{todo.dueDate}</p>
