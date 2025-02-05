@@ -54,13 +54,16 @@ export default function Home() {
     setDueDate("");
   };
 
-  const toggleCompleted = (id: string, isCompleted: boolean) => {
-    const todoItem = todos.find((item: Todo) => item.id === id);
-    if (!todoItem) {
-      return;
-    }
-    const newTodoItem: Todo = { ...todoItem, isCompleted: !isCompleted };
-    setTodos(todos.map((item) => (item.id === id ? newTodoItem : item)));
+  const toggleCompleted = (id: string) => {
+    setTodos((prevTodos) => {
+      const updatedTodos = prevTodos.map((item) =>
+        item.id === id ? { ...item, isCompleted: !item.isCompleted } : item
+      );
+
+      localStorage.setItem("todoArray", JSON.stringify(updatedTodos));
+
+      return updatedTodos;
+    });
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -118,7 +121,7 @@ export default function Home() {
                   <button
                     type="button"
                     className={`${styles.button} ${styles.completeButton} ${styles.listitem}`}
-                    onClick={() => toggleCompleted(todo.id, todo.isCompleted)}
+                    onClick={() => toggleCompleted(todo.id)}
                   >
                     完了
                   </button>
