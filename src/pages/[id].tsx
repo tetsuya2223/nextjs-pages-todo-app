@@ -48,7 +48,7 @@ const TodoDetails = () => {
         </div>
         <div className={styles.detailListItem}>
           <div className={styles.textContainer}>
-            <span className={styles.ItemHeading}>締め切り日:</span>
+            <span className={styles.itemHeading}>締め切り日:</span>
             <p>{todo.dueDate || "なし"}</p>
           </div>
           <button
