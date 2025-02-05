@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import type { Todo } from "./index.tsx";
+import styles from "../styles/detail.module.css";
+import Link from "next/link";
 
 const TodoDetails = () => {
   const router = useRouter();
@@ -29,17 +31,56 @@ const TodoDetails = () => {
   if (todo === null) return <div>通信中...</div>;
   if (todo === "empty") return <p>タスクが存在しません</p>;
   return (
-    <div>
-      <h1>TODO詳細</h1>
-      <p>
-        <strong>タスク:</strong> {todo.text}
-      </p>
-      <p>
-        <strong>締め切り日:</strong> {todo.dueDate || "なし"}
-      </p>
-      <p>
-        <strong>状態:</strong> {todo.isCompleted ? "完了済み" : "未完了"}
-      </p>
+    <div className={styles.detailContainer}>
+      <h1 className={styles.detailHeader}>TODO詳細</h1>
+      <div className={styles.detailList}>
+        <div className={styles.detailListItem}>
+          <div className={styles.textContainer}>
+            <span className={styles.itemHeading}>タスク:</span>
+            <p className={styles.listItemText}>{todo.text}</p>
+          </div>
+          <button
+            type="button"
+            className={`${styles.button} ${styles.editButton}`}
+          >
+            編集
+          </button>
+        </div>
+        <div className={styles.detailListItem}>
+          <div className={styles.textContainer}>
+            <span className={styles.itemHeading}>締め切り日:</span>
+            <p>{todo.dueDate || "なし"}</p>
+          </div>
+          <button
+            type="button"
+            className={`${styles.button} ${styles.editButton}`}
+          >
+            編集
+          </button>
+        </div>
+        <div className={styles.detailListItem}>
+          <div className={styles.textContainer}>
+            <span className={styles.itemHeading}>状態:</span>
+            <p>{todo.isCompleted ? "完了済み" : "未完了"}</p>
+          </div>
+          <button
+            type="button"
+            className={`${styles.button} ${styles.editButton}`}
+          >
+            編集
+          </button>
+        </div>
+      </div>
+      <Link href="/" className={`${styles.button} ${styles.returnButton}`}>
+        ホームに戻る
+      </Link>
+
+      <button
+        type="button"
+        className={`${styles.button} ${styles.deleteButton}`}
+      >
+        タスクを削除する
+      </button>
     </div>
   );
 };
