@@ -76,7 +76,7 @@
 }
 
 @media (hover: hover) {
-  a:any-link:hover {
+  .button:any-link:hover {
     opacity: 0.7;
   }
 }
