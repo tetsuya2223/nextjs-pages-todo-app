@@ -36,7 +36,7 @@ const TodoDetails = () => {
       <div className={styles.detailList}>
         <div className={styles.detailListItem}>
           <div className={styles.textContainer}>
-            <span className={styles.ItemHeading}>タスク:</span>
+            <span className={styles.itemHeading}>タスク:</span>
             <p className={styles.listItemText}>{todo.text}</p>
           </div>
           <button
@@ -60,7 +60,7 @@ const TodoDetails = () => {
         </div>
         <div className={styles.detailListItem}>
           <div className={styles.textContainer}>
-            <span className={styles.ItemHeading}>状態:</span>
+            <span className={styles.itemHeading}>状態:</span>
             <p>{todo.isCompleted ? "完了済み" : "未完了"}</p>
           </div>
           <button
@@ -71,13 +71,8 @@ const TodoDetails = () => {
           </button>
         </div>
       </div>
-      <Link href="/">
-        <button
-          type="button"
-          className={`${styles.button} ${styles.returnButton}`}
-        >
-          ホームに戻る
-        </button>
+      <Link href="/" className={`${styles.button} ${styles.returnButton}`}>
+        ホームに戻る
       </Link>
 
       <button

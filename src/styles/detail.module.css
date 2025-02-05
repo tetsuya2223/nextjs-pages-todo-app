@@ -74,3 +74,9 @@
     opacity: 0.7;
   }
 }
+
+@media (hover: hover) {
+  a:any-link:hover {
+    opacity: 0.7;
+  }
+}
