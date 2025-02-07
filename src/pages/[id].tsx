@@ -21,7 +21,10 @@ const TodoDetails = () => {
       dueDate: false,
       isCompleted: false,
     },
-    editText: {},
+    editText: {
+      text: "",
+      dueDate: "",
+    },
   });
 
   useEffect(() => {
@@ -48,7 +51,7 @@ const TodoDetails = () => {
     }));
   }, [id, router.isReady]);
 
-  const handleEditClick = (field: keyof Todo) => {
+  const handleEditClick = (field: "text" | "dueDate") => {
     if (state.todo === null) return;
 
     setState((prev) => ({
@@ -59,10 +62,7 @@ const TodoDetails = () => {
       },
       editText: {
         ...prev.editText,
-        [field]:
-          typeof prev.todo?.[field] === "boolean"
-            ? String(prev.todo[field])
-            : prev.todo?.[field] ?? "",
+        [field]: prev.todo?.[field] ?? "",
       },
     }));
   };
@@ -121,7 +121,7 @@ const TodoDetails = () => {
             {state.isEditing.text ? (
               <input
                 type="text"
-                value={state.todo.text}
+                value={state.editText.text}
                 onChange={(e) => handleInputChange("text", e.target.value)}
                 onBlur={() => handleSave("text")}
                 className={styles.inputField}
