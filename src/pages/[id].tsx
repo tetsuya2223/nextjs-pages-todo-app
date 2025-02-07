@@ -8,10 +8,21 @@ const TodoDetails = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const [todo, setTodo] = useState<Todo | "empty" | null>(null);
-  const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({});
-  const [editText, setEditText] = useState<{ [key: string]: string }>({});
-  const [isCompleted, setIsCompleted] = useState<boolean>(false);
+  type TodoState = {
+    todo: Todo | null;
+    isEditing: { [key: string]: boolean };
+    editText: { [key: string]: string };
+  };
+
+  const [state, setState] = useState<TodoState>({
+    todo: null,
+    isEditing: {
+      text: false,
+      dueDate: false,
+      isCompleted: false,
+    },
+    editText: {},
+  });
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -22,51 +33,60 @@ const TodoDetails = () => {
     const todos: Todo[] = JSON.parse(savedTodos);
 
     if (todos.length === 0) {
-      setTodo("empty");
+      setState((prev) => ({
+        ...prev,
+        todo: null,
+      }));
       return;
     }
 
     const findTodo = todos.find((todo) => todo.id === id);
 
-    setTodo(findTodo ?? "empty");
+    setState((prev) => ({
+      ...prev,
+      todo: findTodo ?? null,
+    }));
   }, [id, router.isReady]);
 
   const handleEditClick = (field: keyof Todo) => {
-    if (todo === null || todo === "empty") return;
-    setIsEditing((prev) => ({
-      ...prev,
-      [field]: true,
-    }));
+    if (state.todo === null) return;
 
-    if (field === "isCompleted") {
-      setIsCompleted(todo.isCompleted);
-    } else {
-      setEditText((prev) => ({
-        ...prev,
-        [field]: todo && typeof todo !== "string" ? todo[field] : "",
-      }));
-    }
-  };
-  const handleInputChange = (field: string, value: string) => {
-    setEditText((prev) => ({
+    setState((prev) => ({
       ...prev,
-      [field]: value,
+      isEditing: {
+        ...prev.isEditing,
+        [field]: true,
+      },
+      editText: {
+        ...prev.editText,
+        [field]:
+          typeof prev.todo?.[field] === "boolean"
+            ? String(prev.todo[field])
+            : prev.todo?.[field] ?? "",
+      },
+    }));
+  };
+
+  const handleInputChange = (field: keyof Todo, value: string) => {
+    setState((prev) => ({
+      ...prev,
+      editText: {
+        ...prev.editText,
+        [field]: typeof value === "boolean" ? String(value) : value,
+      },
     }));
   };
 
   const handleSave = (field: keyof Todo) => {
-    if (!todo || todo === "empty") return;
+    if (state.todo === null) return;
 
-    const updatedTodo = { ...todo };
+    const updatedTodo = { ...state.todo };
 
     if (field === "isCompleted") {
-      updatedTodo.isCompleted = !isCompleted;
-      setIsCompleted(updatedTodo.isCompleted);
+      updatedTodo.isCompleted = !state.todo.isCompleted;
     } else {
-      updatedTodo[field] = editText[field];
+      updatedTodo[field] = state.editText[field] ?? "";
     }
-
-    setTodo(updatedTodo);
 
     const savedTodos = localStorage.getItem("todoArray");
     if (savedTodos) {
@@ -75,9 +95,13 @@ const TodoDetails = () => {
       localStorage.setItem("todoArray", JSON.stringify(updatedTodos));
     }
 
-    setIsEditing((prev) => ({
+    setState((prev) => ({
       ...prev,
-      [field]: false,
+      todo: updatedTodo,
+      isEditing: {
+        ...prev.isEditing,
+        [field]: false,
+      },
     }));
   };
 
@@ -85,8 +109,8 @@ const TodoDetails = () => {
     e.preventDefault();
   };
 
-  if (todo === null) return <div>通信中...</div>;
-  if (todo === "empty") return <p>タスクが存在しません</p>;
+  if (state.todo === null) return <div>通信中...</div>;
+  if (state.todo.text.trim().length === 0) return <p>タスクが存在しません</p>;
   return (
     <div className={styles.detailContainer}>
       <h1 className={styles.detailHeader}>TODO詳細</h1>
@@ -94,20 +118,20 @@ const TodoDetails = () => {
         <form className={styles.detailListItem} onSubmit={handleSubmit}>
           <div className={styles.textContainer}>
             <span className={styles.itemHeading}>タスク:</span>
-            {isEditing.text ? (
+            {state.isEditing.text ? (
               <input
                 type="text"
-                value={editText.text}
+                value={state.todo.text}
                 onChange={(e) => handleInputChange("text", e.target.value)}
                 onBlur={() => handleSave("text")}
                 className={styles.inputField}
                 autoFocus
               />
             ) : (
-              <p className={styles.listItemText}>{todo.text}</p>
+              <p className={styles.listItemText}>{state.todo.text}</p>
             )}
           </div>
-          {isEditing.text ? (
+          {state.isEditing.text ? (
             <button
               type="submit"
               className={`${styles.button} ${styles.editButton}`}
@@ -129,20 +153,21 @@ const TodoDetails = () => {
         <form className={styles.detailListItem} onSubmit={handleSubmit}>
           <div className={styles.textContainer}>
             <span className={styles.itemHeading}>締め切り日:</span>
-            {isEditing.dueDate ? (
+            {state.isEditing.dueDate ? (
               <input
                 type="date"
-                value={editText.dueDate || ""}
+                value={state.editText.dueDate || ""}
                 onChange={(e) => handleInputChange("dueDate", e.target.value)}
                 onBlur={() => handleSave("dueDate")}
                 onKeyDown={(e) => e.key === "Enter" && handleSave("dueDate")}
                 className={styles.inputField}
+                autoFocus
               />
             ) : (
-              <p>{todo.dueDate || "なし"}</p>
+              <p>{state.todo.dueDate || "なし"}</p>
             )}
           </div>
-          {isEditing.dueDate ? (
+          {state.isEditing.dueDate ? (
             <button
               type="submit"
               className={`${styles.button} ${styles.editButton}`}
@@ -164,14 +189,14 @@ const TodoDetails = () => {
         <form className={styles.detailListItem} onSubmit={handleSubmit}>
           <div className={styles.textContainer}>
             <span className={styles.itemHeading}>状態:</span>
-            <p>{todo.isCompleted ? "完了済み" : "未完了"}</p>
+            <p>{state.todo.isCompleted ? "完了済み" : "未完了"}</p>
           </div>
           <button
             type="submit"
             className={`${styles.button} ${styles.editButton}`}
             onClick={() => handleSave("isCompleted")}
           >
-            {todo.isCompleted ? "未完了にする" : "完了にする"}
+            {state.todo.isCompleted ? "未完了にする" : "完了にする"}
           </button>
         </form>
       </div>
