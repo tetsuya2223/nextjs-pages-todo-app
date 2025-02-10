@@ -45,6 +45,10 @@
   text-overflow: ellipsis;
 }
 
+.checkbox {
+  -webkit-appearance: "auto";
+}
+
 .button {
   padding: 5px 10px;
   font-size: 14px;
