@@ -4,6 +4,7 @@ import type { Todo } from "./index.tsx";
 import detailsStyles from "../styles/detail.module.css";
 import Link from "next/link";
 
+// データ保存はボタンを1つだけ設置し、まとめて管理。
 type TodoData = {
   isLoading: boolean;
   data: Todo | null;
@@ -20,6 +21,7 @@ const TodoDetails = () => {
 
   const [todo, setTodo] = useState<TodoData>(defaultValue);
 
+  // textを変更するための関数
   const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
 
@@ -37,6 +39,7 @@ const TodoDetails = () => {
     });
   };
 
+  // 締め切り日を変更するための関数
   const handleAssignDate = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
 
@@ -54,6 +57,7 @@ const TodoDetails = () => {
     });
   };
 
+  // 完了/未完了を切り変える関数
   const handleCompleted = () => {
     setTodo((prev) => {
       if (!prev.data) return defaultValue;
@@ -150,9 +154,11 @@ const TodoDetails = () => {
           <div className={detailsStyles.textContainer}>
             <span className={detailsStyles.itemHeading}>状態:</span>
             <input
+              // 完了/未完了の状態切替にチェックボックスを使用
               type="checkbox"
               id="isCompleted"
               className={detailsStyles.checkbox}
+              // isCompleted が true ならチェックが入る
               checked={todo.data.isCompleted}
               onChange={handleCompleted}
             />
@@ -177,7 +183,7 @@ const TodoDetails = () => {
         タスクを削除する
       </button>
 
-      <button
+      <button //保存ボタンを押すまではデータベース（ここではlocalstorage）へデータは保存しない。
         type="button"
         className={`${detailsStyles.button} ${detailsStyles.editButton}`}
         onClick={() => {
