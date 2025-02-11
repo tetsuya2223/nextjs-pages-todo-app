@@ -1,216 +1,208 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import type { Todo } from "./index.tsx";
-import styles from "../styles/detail.module.css";
+import detailsStyles from "../styles/detail.module.css";
 import Link from "next/link";
+
+type TodoData = {
+  isLoading: boolean;
+  data: Todo | null;
+};
+
+const defaultValue = {
+  isLoading: true,
+  data: null,
+};
 
 const TodoDetails = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  type TodoState = {
-    todo: Todo | null;
-    isEditing: { [key: string]: boolean };
-    editText: { [key: string]: string };
+  const [todo, setTodo] = useState<TodoData>(defaultValue);
+
+  const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.currentTarget;
+
+    // ここでは state の変更に留めること
+    setTodo((prev) => {
+      if (!prev.data) return defaultValue;
+
+      return {
+        isLoading: prev.isLoading,
+        data: {
+          ...prev.data,
+          text: value,
+        },
+      };
+    });
   };
 
-  const [state, setState] = useState<TodoState>({
-    todo: null,
-    isEditing: {
-      text: false,
-      dueDate: false,
-      isCompleted: false,
-    },
-    editText: {
-      text: "",
-      dueDate: "",
-    },
-  });
+  const handleAssignDate = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.currentTarget;
+
+    // ここでは state の変更に留めること
+    setTodo((prev) => {
+      if (!prev.data) return defaultValue;
+
+      return {
+        isLoading: prev.isLoading,
+        data: {
+          ...prev.data,
+          dueDate: value,
+        },
+      };
+    });
+  };
+
+  const handleCompleted = () => {
+    setTodo((prev) => {
+      if (!prev.data) return defaultValue;
+
+      return {
+        isLoading: prev.isLoading,
+        data: {
+          ...prev.data,
+          isCompleted: !prev.data.isCompleted,
+        },
+      };
+    });
+  };
 
   useEffect(() => {
     if (!router.isReady) return;
 
     const savedTodos = localStorage.getItem("todoArray");
-    if (!savedTodos) return;
+
+    if (!savedTodos) {
+      setTodo({ isLoading: false, data: null });
+      return;
+    }
 
     const todos: Todo[] = JSON.parse(savedTodos);
 
     if (todos.length === 0) {
-      setState((prev) => ({
-        ...prev,
-        todo: null,
-      }));
+      setTodo({ isLoading: false, data: null });
       return;
     }
 
     const findTodo = todos.find((todo) => todo.id === id);
 
-    setState((prev) => ({
-      ...prev,
-      todo: findTodo ?? null,
-    }));
+    if (!findTodo) {
+      setTodo({ isLoading: false, data: null });
+      return;
+    }
+
+    setTodo({ isLoading: false, data: findTodo });
   }, [id, router.isReady]);
 
-  const handleEditClick = (field: "text" | "dueDate") => {
-    if (state.todo === null) return;
+  // 1. データ通信中の場合
+  if (todo.isLoading) {
+    return <div className={detailsStyles.detailContainer}>通信中...</div>;
+  }
 
-    setState((prev) => ({
-      ...prev,
-      isEditing: {
-        ...prev.isEditing,
-        [field]: true,
-      },
-      editText: {
-        ...prev.editText,
-        [field]: prev.todo?.[field] ?? "",
-      },
-    }));
-  };
-
-  const handleInputChange = (field: keyof Todo, value: string) => {
-    setState((prev) => ({
-      ...prev,
-      editText: {
-        ...prev.editText,
-        [field]: typeof value === "boolean" ? String(value) : value,
-      },
-    }));
-  };
-
-  const handleSave = (field: keyof Todo) => {
-    if (state.todo === null) return;
-
-    const updatedTodo = { ...state.todo };
-
-    if (field === "isCompleted") {
-      updatedTodo.isCompleted = !state.todo.isCompleted;
-    } else {
-      updatedTodo[field] = state.editText[field] ?? "";
-    }
-
-    const savedTodos = localStorage.getItem("todoArray");
-    if (savedTodos) {
-      const todos: Todo[] = JSON.parse(savedTodos);
-      const updatedTodos = todos.map((t) => (t.id === id ? updatedTodo : t));
-      localStorage.setItem("todoArray", JSON.stringify(updatedTodos));
-    }
-
-    setState((prev) => ({
-      ...prev,
-      todo: updatedTodo,
-      isEditing: {
-        ...prev.isEditing,
-        [field]: false,
-      },
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  };
-
-  if (state.todo === null) return <div>通信中...</div>;
-  if (state.todo.text.trim().length === 0) return <p>タスクが存在しません</p>;
-  return (
-    <div className={styles.detailContainer}>
-      <h1 className={styles.detailHeader}>TODO詳細</h1>
-      <div className={styles.detailList}>
-        <form className={styles.detailListItem} onSubmit={handleSubmit}>
-          <div className={styles.textContainer}>
-            <span className={styles.itemHeading}>タスク:</span>
-            {state.isEditing.text ? (
-              <input
-                type="text"
-                value={state.editText.text}
-                onChange={(e) => handleInputChange("text", e.target.value)}
-                onBlur={() => handleSave("text")}
-                className={styles.inputField}
-                autoFocus
-              />
-            ) : (
-              <p className={styles.listItemText}>{state.todo.text}</p>
-            )}
-          </div>
-          {state.isEditing.text ? (
-            <button
-              type="submit"
-              className={`${styles.button} ${styles.editButton}`}
-              onClick={() => handleSave("text")}
-            >
-              保存
-            </button>
-          ) : (
-            <button
-              type="button"
-              className={`${styles.button} ${styles.editButton}`}
-              onClick={() => handleEditClick("text")}
-            >
-              編集
-            </button>
-          )}
-        </form>
-
-        <form className={styles.detailListItem} onSubmit={handleSubmit}>
-          <div className={styles.textContainer}>
-            <span className={styles.itemHeading}>締め切り日:</span>
-            {state.isEditing.dueDate ? (
-              <input
-                type="date"
-                value={state.editText.dueDate || ""}
-                onChange={(e) => handleInputChange("dueDate", e.target.value)}
-                onBlur={() => handleSave("dueDate")}
-                onKeyDown={(e) => e.key === "Enter" && handleSave("dueDate")}
-                className={styles.inputField}
-                autoFocus
-              />
-            ) : (
-              <p>{state.todo.dueDate || "なし"}</p>
-            )}
-          </div>
-          {state.isEditing.dueDate ? (
-            <button
-              type="submit"
-              className={`${styles.button} ${styles.editButton}`}
-              onClick={() => handleSave("dueDate")}
-            >
-              保存
-            </button>
-          ) : (
-            <button
-              type="button"
-              className={`${styles.button} ${styles.editButton}`}
-              onClick={() => handleEditClick("dueDate")}
-            >
-              編集
-            </button>
-          )}
-        </form>
-
-        <form className={styles.detailListItem} onSubmit={handleSubmit}>
-          <div className={styles.textContainer}>
-            <span className={styles.itemHeading}>状態:</span>
-            <p>{state.todo.isCompleted ? "完了済み" : "未完了"}</p>
-          </div>
-          <button
-            type="submit"
-            className={`${styles.button} ${styles.editButton}`}
-            onClick={() => handleSave("isCompleted")}
-          >
-            {state.todo.isCompleted ? "未完了にする" : "完了にする"}
-          </button>
-        </form>
+  // 2. データ通信が完了したが、データが存在しなかった場合
+  if (!todo.data) {
+    return (
+      <div className={detailsStyles.detailContainer}>
+        <p>タスクが存在しません</p>
+        <Link
+          href="/"
+          className={`${detailsStyles.button} ${detailsStyles.returnButton}`}
+        >
+          ホームに戻る
+        </Link>
       </div>
-      <Link href="/" className={`${styles.button} ${styles.returnButton}`}>
+    );
+  }
+
+  // 3. データ通信が完了し、データが存在していた場合（data が null でない場合）
+  return (
+    <div className={detailsStyles.detailContainer}>
+      <h1 className={detailsStyles.detailHeader}>TODOタスク詳細</h1>
+
+      <div className={detailsStyles.detailList}>
+        <div className={detailsStyles.detailListItem}>
+          <div className={detailsStyles.textContainer}>
+            <span className={detailsStyles.itemHeading}>タスク:</span>
+            <input
+              type="text"
+              id="task-input"
+              placeholder="タスクを入力"
+              style={{ border: "1px solid gray" }}
+              value={todo.data.text}
+              onChange={handleChangeText}
+            />
+          </div>
+        </div>
+
+        <div className={detailsStyles.detailListItem}>
+          <div className={detailsStyles.textContainer}>
+            <span className={detailsStyles.itemHeading}>締め切り日:</span>
+            <input
+              type="date"
+              value={todo.data.dueDate}
+              onChange={handleAssignDate}
+            />
+          </div>
+        </div>
+
+        <div className={detailsStyles.detailListItem}>
+          <div className={detailsStyles.textContainer}>
+            <span className={detailsStyles.itemHeading}>状態:</span>
+            <input
+              type="checkbox"
+              id="isCompleted"
+              className={detailsStyles.checkbox}
+              checked={todo.data.isCompleted}
+              onChange={handleCompleted}
+            />
+            <label htmlFor="isCompleted">
+              {todo.data.isCompleted ? "完了" : "未完了"}
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <Link
+        href="/"
+        className={`${detailsStyles.button} ${detailsStyles.returnButton}`}
+      >
         ホームに戻る
       </Link>
 
       <button
         type="button"
-        className={`${styles.button} ${styles.deleteButton}`}
+        className={`${detailsStyles.button} ${detailsStyles.deleteButton}`}
       >
         タスクを削除する
+      </button>
+
+      <button
+        type="button"
+        className={`${detailsStyles.button} ${detailsStyles.editButton}`}
+        onClick={() => {
+          const savedTodos = localStorage.getItem("todoArray");
+
+          if (!savedTodos) return;
+          const parsedTodos = JSON.parse(savedTodos) as Todo[];
+
+          if (!todo.data) return;
+
+          const newTodoArray = parsedTodos.map((item) => {
+            if (item.id === todo.data?.id) {
+              return todo.data;
+            }
+
+            return item;
+          });
+
+          localStorage.setItem("todoArray", JSON.stringify(newTodoArray));
+        }}
+      >
+        変更内容を保存する
       </button>
     </div>
   );
 };
+
 export default TodoDetails;
