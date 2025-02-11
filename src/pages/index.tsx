@@ -35,6 +35,7 @@ export default function Home() {
       alert("タスクを入力してください");
       return;
     }
+
     const uuid = self.crypto.randomUUID();
     const newTodos: Todo = {
       id: uuid,

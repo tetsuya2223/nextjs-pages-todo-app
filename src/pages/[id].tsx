@@ -1,87 +1,208 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import type { Todo } from "./index.tsx";
-import styles from "../styles/detail.module.css";
+import detailsStyles from "../styles/detail.module.css";
 import Link from "next/link";
+
+type TodoData = {
+  isLoading: boolean;
+  data: Todo | null;
+};
+
+const defaultValue = {
+  isLoading: true,
+  data: null,
+};
 
 const TodoDetails = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const [todo, setTodo] = useState<Todo | "empty" | null>(null);
+  const [todo, setTodo] = useState<TodoData>(defaultValue);
+
+  const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.currentTarget;
+
+    // ここでは state の変更に留めること
+    setTodo((prev) => {
+      if (!prev.data) return defaultValue;
+
+      return {
+        isLoading: prev.isLoading,
+        data: {
+          ...prev.data,
+          text: value,
+        },
+      };
+    });
+  };
+
+  const handleAssignDate = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.currentTarget;
+
+    // ここでは state の変更に留めること
+    setTodo((prev) => {
+      if (!prev.data) return defaultValue;
+
+      return {
+        isLoading: prev.isLoading,
+        data: {
+          ...prev.data,
+          dueDate: value,
+        },
+      };
+    });
+  };
+
+  const handleCompleted = () => {
+    setTodo((prev) => {
+      if (!prev.data) return defaultValue;
+
+      return {
+        isLoading: prev.isLoading,
+        data: {
+          ...prev.data,
+          isCompleted: !prev.data.isCompleted,
+        },
+      };
+    });
+  };
 
   useEffect(() => {
     if (!router.isReady) return;
 
     const savedTodos = localStorage.getItem("todoArray");
-    if (!savedTodos) return;
+
+    if (!savedTodos) {
+      setTodo({ isLoading: false, data: null });
+      return;
+    }
 
     const todos: Todo[] = JSON.parse(savedTodos);
 
     if (todos.length === 0) {
-      setTodo("empty");
+      setTodo({ isLoading: false, data: null });
       return;
     }
 
     const findTodo = todos.find((todo) => todo.id === id);
 
-    setTodo(findTodo ?? "empty");
+    if (!findTodo) {
+      setTodo({ isLoading: false, data: null });
+      return;
+    }
+
+    setTodo({ isLoading: false, data: findTodo });
   }, [id, router.isReady]);
 
-  if (todo === null) return <div>通信中...</div>;
-  if (todo === "empty") return <p>タスクが存在しません</p>;
+  // 1. データ通信中の場合
+  if (todo.isLoading) {
+    return <div className={detailsStyles.detailContainer}>通信中...</div>;
+  }
+
+  // 2. データ通信が完了したが、データが存在しなかった場合
+  if (!todo.data) {
+    return (
+      <div className={detailsStyles.detailContainer}>
+        <p>タスクが存在しません</p>
+        <Link
+          href="/"
+          className={`${detailsStyles.button} ${detailsStyles.returnButton}`}
+        >
+          ホームに戻る
+        </Link>
+      </div>
+    );
+  }
+
+  // 3. データ通信が完了し、データが存在していた場合（data が null でない場合）
   return (
-    <div className={styles.detailContainer}>
-      <h1 className={styles.detailHeader}>TODO詳細</h1>
-      <div className={styles.detailList}>
-        <div className={styles.detailListItem}>
-          <div className={styles.textContainer}>
-            <span className={styles.itemHeading}>タスク:</span>
-            <p className={styles.listItemText}>{todo.text}</p>
+    <div className={detailsStyles.detailContainer}>
+      <h1 className={detailsStyles.detailHeader}>TODOタスク詳細</h1>
+
+      <div className={detailsStyles.detailList}>
+        <div className={detailsStyles.detailListItem}>
+          <div className={detailsStyles.textContainer}>
+            <span className={detailsStyles.itemHeading}>タスク:</span>
+            <input
+              type="text"
+              id="task-input"
+              placeholder="タスクを入力"
+              style={{ border: "1px solid gray" }}
+              value={todo.data.text}
+              onChange={handleChangeText}
+            />
           </div>
-          <button
-            type="button"
-            className={`${styles.button} ${styles.editButton}`}
-          >
-            編集
-          </button>
         </div>
-        <div className={styles.detailListItem}>
-          <div className={styles.textContainer}>
-            <span className={styles.itemHeading}>締め切り日:</span>
-            <p>{todo.dueDate || "なし"}</p>
+
+        <div className={detailsStyles.detailListItem}>
+          <div className={detailsStyles.textContainer}>
+            <span className={detailsStyles.itemHeading}>締め切り日:</span>
+            <input
+              type="date"
+              value={todo.data.dueDate}
+              onChange={handleAssignDate}
+            />
           </div>
-          <button
-            type="button"
-            className={`${styles.button} ${styles.editButton}`}
-          >
-            編集
-          </button>
         </div>
-        <div className={styles.detailListItem}>
-          <div className={styles.textContainer}>
-            <span className={styles.itemHeading}>状態:</span>
-            <p>{todo.isCompleted ? "完了済み" : "未完了"}</p>
+
+        <div className={detailsStyles.detailListItem}>
+          <div className={detailsStyles.textContainer}>
+            <span className={detailsStyles.itemHeading}>状態:</span>
+            <input
+              type="checkbox"
+              id="isCompleted"
+              className={detailsStyles.checkbox}
+              checked={todo.data.isCompleted}
+              onChange={handleCompleted}
+            />
+            <label htmlFor="isCompleted">
+              {todo.data.isCompleted ? "完了" : "未完了"}
+            </label>
           </div>
-          <button
-            type="button"
-            className={`${styles.button} ${styles.editButton}`}
-          >
-            編集
-          </button>
         </div>
       </div>
-      <Link href="/" className={`${styles.button} ${styles.returnButton}`}>
+
+      <Link
+        href="/"
+        className={`${detailsStyles.button} ${detailsStyles.returnButton}`}
+      >
         ホームに戻る
       </Link>
 
       <button
         type="button"
-        className={`${styles.button} ${styles.deleteButton}`}
+        className={`${detailsStyles.button} ${detailsStyles.deleteButton}`}
       >
         タスクを削除する
+      </button>
+
+      <button
+        type="button"
+        className={`${detailsStyles.button} ${detailsStyles.editButton}`}
+        onClick={() => {
+          const savedTodos = localStorage.getItem("todoArray");
+
+          if (!savedTodos) return;
+          const parsedTodos = JSON.parse(savedTodos) as Todo[];
+
+          if (!todo.data) return;
+
+          const newTodoArray = parsedTodos.map((item) => {
+            if (item.id === todo.data?.id) {
+              return todo.data;
+            }
+
+            return item;
+          });
+
+          localStorage.setItem("todoArray", JSON.stringify(newTodoArray));
+        }}
+      >
+        変更内容を保存する
       </button>
     </div>
   );
 };
+
 export default TodoDetails;
