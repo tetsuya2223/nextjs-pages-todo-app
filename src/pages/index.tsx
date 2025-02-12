@@ -109,25 +109,27 @@ export default function Home() {
           <ul className={styles.taskList}>
             {todos.map((todo) => (
               <li className={styles.listItems} key={todo.id}>
-                <Link href={`/${todo.id}`}>
-                  <p
-                    className={`${styles.listItemText} ${styles.listitem} ${
-                      todo.isCompleted ? styles.listItemTextComped : ""
-                    }`}
-                  >
-                    {todo.text}
-                  </p>
-                </Link>
+                <div className={styles.textContainer}>
+                  <input
+                    type="checkbox"
+                    className={styles.checkbox}
+                    onChange={() => toggleCompleted(todo.id)}
+                    checked={todo.isCompleted}
+                  />
+                  <Link href={`/${todo.id}`}>
+                    <p
+                      className={`${styles.listItemText} ${styles.listitem} ${
+                        todo.isCompleted ? styles.listItemTextComped : ""
+                      }`}
+                    >
+                      {todo.text}
+                    </p>
+                  </Link>
+                </div>
                 {/* 今後、リストの表示方法は修正します。 */}
                 <div className={styles.btnContainer}>
                   <p className={styles.inputDate}>{todo.dueDate}</p>
-                  <button
-                    type="button"
-                    className={`${styles.button} ${styles.completeButton} ${styles.listitem}`}
-                    onClick={() => toggleCompleted(todo.id)}
-                  >
-                    完了
-                  </button>
+
                   <button
                     type="button"
                     className={`${styles.button} ${styles.deleteButton} ${styles.listitem}`}
