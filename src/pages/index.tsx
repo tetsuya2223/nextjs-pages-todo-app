@@ -6,6 +6,7 @@ import Link from "next/link";
 export type Todo = {
   id: string;
   text: string;
+  detail: string | null;
   dueDate: string;
   isCompleted: boolean;
 };
@@ -40,6 +41,7 @@ export default function Home() {
     const newTodos: Todo = {
       id: uuid,
       text: text,
+      detail: null,
       dueDate: dueDate
         ? formatInTimeZone(dueDate, "Asia/Tokyo", "yyyy/MM/dd")
         : "",
