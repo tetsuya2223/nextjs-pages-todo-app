@@ -127,10 +127,12 @@ const TodoDetails = () => {
       <div className={detailsStyles.detailList}>
         <div className={detailsStyles.detailListItem}>
           <div className={detailsStyles.textContainer}>
-            <span className={detailsStyles.itemHeading}>タスク:</span>
+            <label htmlFor="taskInput" className={detailsStyles.itemHeading}>
+              タスク:
+            </label>
             <input
               type="text"
-              id="task-input"
+              id="taskInput"
               placeholder="タスクを入力"
               style={{ border: "1px solid gray" }}
               value={todo.data.text}
@@ -140,10 +142,29 @@ const TodoDetails = () => {
         </div>
 
         <div className={detailsStyles.detailListItem}>
+          <div className={detailsStyles.detailTextContainer}>
+            <label htmlFor="detailText" className={detailsStyles.itemHeading}>
+              タスク詳細:
+            </label>
+            <textarea
+              className={detailsStyles.detailTextarea}
+              name=""
+              id="detailText"
+              rows={5}
+              placeholder="詳細を入力してください"
+              maxLength={500}
+            ></textarea>
+          </div>
+        </div>
+
+        <div className={detailsStyles.detailListItem}>
           <div className={detailsStyles.textContainer}>
-            <span className={detailsStyles.itemHeading}>締め切り日:</span>
+            <label htmlFor="dueDate" className={detailsStyles.itemHeading}>
+              締め切り日:
+            </label>
             <input
               type="date"
+              id="dueDate"
               value={todo.data.dueDate}
               onChange={handleAssignDate}
             />
