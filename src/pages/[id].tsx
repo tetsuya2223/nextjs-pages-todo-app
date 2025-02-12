@@ -39,6 +39,24 @@ const TodoDetails = () => {
     });
   };
 
+  // 詳細を変更するための関数
+  const handleChangeDetailText = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    const { value } = event.currentTarget;
+
+    // stateの変更のみを実施。データベースへの保存は行わない。
+    setTodo((prev) => {
+      if (!prev.data) return defaultValue;
+
+      return {
+        isLoading: prev.isLoading,
+        data: {
+          ...prev.data,
+          detail: value,
+        },
+      };
+    });
+  };
+
   // 締め切り日を変更するための関数
   const handleAssignDate = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
@@ -127,10 +145,12 @@ const TodoDetails = () => {
       <div className={detailsStyles.detailList}>
         <div className={detailsStyles.detailListItem}>
           <div className={detailsStyles.textContainer}>
-            <span className={detailsStyles.itemHeading}>タスク:</span>
+            <label htmlFor="taskInput" className={detailsStyles.itemHeading}>
+              タスク:
+            </label>
             <input
               type="text"
-              id="task-input"
+              id="taskInput"
               placeholder="タスクを入力"
               style={{ border: "1px solid gray" }}
               value={todo.data.text}
@@ -140,10 +160,31 @@ const TodoDetails = () => {
         </div>
 
         <div className={detailsStyles.detailListItem}>
+          <div className={detailsStyles.detailTextContainer}>
+            <label htmlFor="detailText" className={detailsStyles.itemHeading}>
+              タスク詳細:
+            </label>
+            <textarea
+              className={detailsStyles.detailTextarea}
+              name=""
+              id="detailText"
+              rows={5}
+              placeholder="詳細を入力してください"
+              maxLength={500}
+              value={todo.data.detail}
+              onChange={handleChangeDetailText}
+            />
+          </div>
+        </div>
+
+        <div className={detailsStyles.detailListItem}>
           <div className={detailsStyles.textContainer}>
-            <span className={detailsStyles.itemHeading}>締め切り日:</span>
+            <label htmlFor="dueDate" className={detailsStyles.itemHeading}>
+              締め切り日:
+            </label>
             <input
               type="date"
+              id="dueDate"
               value={todo.data.dueDate}
               onChange={handleAssignDate}
             />

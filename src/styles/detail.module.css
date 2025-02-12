@@ -45,6 +45,16 @@
   text-overflow: ellipsis;
 }
 
+.detailTextContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.detailTextarea {
+  border: solid 0.5px;
+  white-space: pre-wrap;
+}
+
 .checkbox {
   -webkit-appearance: "auto";
 }
