@@ -39,6 +39,24 @@ const TodoDetails = () => {
     });
   };
 
+  // 詳細を変更するための関数
+  const handleChangeDetailText = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    const { value } = event.currentTarget;
+
+    // stateの変更のみを実施。データベースへの保存は行わない。
+    setTodo((prev) => {
+      if (!prev.data) return defaultValue;
+
+      return {
+        isLoading: prev.isLoading,
+        data: {
+          ...prev.data,
+          detail: value,
+        },
+      };
+    });
+  };
+
   // 締め切り日を変更するための関数
   const handleAssignDate = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
@@ -153,6 +171,8 @@ const TodoDetails = () => {
               rows={5}
               placeholder="詳細を入力してください"
               maxLength={500}
+              value={todo.data.detail}
+              onChange={handleChangeDetailText}
             ></textarea>
           </div>
         </div>
