@@ -173,7 +173,7 @@ const TodoDetails = () => {
               maxLength={500}
               value={todo.data.detail}
               onChange={handleChangeDetailText}
-            ></textarea>
+            />
           </div>
         </div>
 
