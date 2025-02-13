@@ -11,10 +11,14 @@ export type Todo = {
   isCompleted: boolean;
 };
 
+type Filter = "all" | "completed" | "unCompleted";
+
 export default function Home() {
   const [text, setText] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [filter, setFilter] = useState<Filter>("all");
+  const [order, setOrder] = useState("asc");
 
   useEffect(() => {
     const saveTodos = localStorage.getItem("todoArray");
@@ -79,6 +83,46 @@ export default function Home() {
     localStorage.setItem("todoArray", JSON.stringify(newTodos));
   };
 
+  const handleFilter = (filter: Filter) => {
+    setFilter(filter);
+  };
+
+  const filteredTodos = todos.filter((todo) => {
+    switch (filter) {
+      case "all":
+        return todo;
+      case "completed":
+        return todo.isCompleted;
+      case "unCompleted":
+        return !todo.isCompleted;
+      default:
+        return todo;
+    }
+  });
+
+  const sortTodos = (order: "asc" | "desc") => {
+    setTodos((prevTodos) => {
+      const sortedTodos = [...prevTodos].sort((a, b) => {
+        const dateA = a.dueDate ? new Date(a.dueDate).getTime() : 0;
+        const dateB = b.dueDate ? new Date(b.dueDate).getTime() : 0;
+
+        return order === "asc" ? dateA - dateB : dateB - dateA;
+      });
+
+      localStorage.setItem("todoArray", JSON.stringify(sortedTodos));
+
+      return sortedTodos;
+    });
+  };
+
+  const toggleSortOrder = () => {
+    setOrder((prevOrder) => {
+      const newOrder = prevOrder === "asc" ? "desc" : "asc";
+      sortTodos(newOrder);
+      return newOrder;
+    });
+  };
+
   return (
     <>
       <h1 className={styles.title}>TODOリスト</h1>
@@ -105,9 +149,29 @@ export default function Home() {
             </button>
           </div>
         </form>
-        <div>
+        <div className={styles.ListContainer}>
+          <div className={styles.sortContainer}>
+            <select
+              className={styles.sortBox}
+              defaultValue="all"
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                handleFilter(e.target.value as Filter)
+              }
+            >
+              <option value="all">すべてのタスク</option>
+              <option value="completed">完了したタスク</option>
+              <option value="unCompleted">現在のタスク</option>
+            </select>
+            <button
+              type="button"
+              className={`${styles.button} ${styles.sortButton}`}
+              onClick={toggleSortOrder}
+            >
+              締切順で並べ替え
+            </button>
+          </div>
           <ul className={styles.taskList}>
-            {todos.map((todo) => (
+            {filteredTodos.map((todo) => (
               <li className={styles.listItems} key={todo.id}>
                 <div className={styles.textContainer}>
                   <input
