@@ -5,13 +5,6 @@
   font-weight: bold;
 }
 
-.todoContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
 .inputArea {
   margin-bottom: 16px;
   display: flex;
@@ -52,28 +45,6 @@
   background-color: #0070f3;
 }
 
-.ListContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.sortContainer {
-  display: flex;
-  justify-content: space-between;
-}
-
-.sortBox {
-  appearance: auto;
-  border: 1px solid;
-  width: 200px;
-}
-
-.sortButton {
-  color: black;
-  background-color: rgb(221, 220, 219);
-}
-
 .taskList {
   display: flex;
   flex-direction: column;
@@ -81,12 +52,13 @@
   padding: 0;
   margin: 0 auto;
   gap: 8px;
-  width: 600px;
+  max-width: 600px;
 }
 
 .listItems {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 10px 15px;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
@@ -141,7 +113,13 @@
 }
 
 @media (hover: hover) {
-  .button:enabled:hover {
-    opacity: 0.7;
+  .addButton:enabled:hover {
+    background-color: #005bb5;
+  }
+  .completeButton:enabled:hover {
+    background-color: rgb(27, 85, 11);
+  }
+  .deleteButton:enabled:hover {
+    background-color: #d62828;
   }
 }
