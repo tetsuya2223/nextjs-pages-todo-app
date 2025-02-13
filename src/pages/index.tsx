@@ -18,10 +18,10 @@ export default function Home() {
   const [dueDate, setDueDate] = useState("");
   const [todos, setTodos] = useState<Todo[]>([]);
   const [filter, setFilter] = useState<Filter>("all");
-  const [order, setOrder] = useState("asc");
 
   useEffect(() => {
     const saveTodos = localStorage.getItem("todoArray");
+
     if (saveTodos) {
       setTodos(JSON.parse(saveTodos));
     }
@@ -98,23 +98,26 @@ export default function Home() {
         return todo;
     }
   });
-  const sortTodos = (order: "asc" | "desc") => {
-    setTodos((prevTodos) => {
-      const sortedTodos = [...prevTodos].sort((a, b) => {
-        const dateA = a.dueDate ? new Date(a.dueDate).getTime() : 0;
-        const dateB = b.dueDate ? new Date(b.dueDate).getTime() : 0;
-        return order === "asc" ? dateA - dateB : dateB - dateA;
-      });
-      localStorage.setItem("todoArray", JSON.stringify(sortedTodos));
-      return sortedTodos;
-    });
-  };
   const toggleSortOrder = () => {
-    setOrder((prevOrder) => {
-      const newOrder = prevOrder === "asc" ? "desc" : "asc";
-      sortTodos(newOrder);
-      return newOrder;
+    const sortedTodos = [...todos].sort((a, b) => {
+      const dateA = a.dueDate ? new Date(a.dueDate).getTime() : 0;
+      const dateB = b.dueDate ? new Date(b.dueDate).getTime() : 0;
+
+      return dateA - dateB; // 昇順
     });
+
+    setTodos(sortedTodos);
+  };
+
+  const toggleSortOrderDesc = () => {
+    const sortedTodos = [...todos].sort((a, b) => {
+      const dateA = a.dueDate ? new Date(a.dueDate).getTime() : 0;
+      const dateB = b.dueDate ? new Date(b.dueDate).getTime() : 0;
+
+      return dateB - dateA; // 降順
+    });
+
+    setTodos(sortedTodos);
   };
   return (
     <>
@@ -156,13 +159,22 @@ export default function Home() {
               <option value="completed">完了したタスク</option>
               <option value="unCompleted">現在のタスク</option>
             </select>
-            <button
-              type="button"
-              className={`${styles.button} ${styles.sortButton}`}
-              onClick={toggleSortOrder}
-            >
-              締切順で並べ替え
-            </button>
+            <div className={styles.sortOder}>
+              <button
+                type="button"
+                className={`${styles.button} ${styles.sortButton}`}
+                onClick={toggleSortOrder}
+              >
+                昇順
+              </button>
+              <button
+                type="button"
+                className={`${styles.button} ${styles.sortButton}`}
+                onClick={toggleSortOrderDesc}
+              >
+                降順
+              </button>
+            </div>
           </div>
           <div>
             <ul className={styles.taskList}>
