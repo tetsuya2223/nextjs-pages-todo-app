@@ -17,7 +17,6 @@ export default function Home() {
   const [text, setText] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [filter, setFilter] = useState<Filter>("all");
 
   useEffect(() => {
     const saveTodos = localStorage.getItem("todoArray");
@@ -83,21 +82,22 @@ export default function Home() {
     localStorage.setItem("todoArray", JSON.stringify(newTodos));
   };
 
-  const handleFilter = (filter: Filter) => {
-    setFilter(filter);
+  const handleOptionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const filterValue = event.target.value as Filter;
+
+    const filterConditions: Record<Filter, (todo: Todo) => boolean> = {
+      all: () => true,
+      completed: (todo) => todo.isCompleted,
+      unCompleted: (todo) => !todo.isCompleted,
+    };
+
+    const filteredTodos = todos.filter(
+      filterConditions[filterValue] || (() => true)
+    );
+
+    setTodos(filteredTodos);
   };
-  const filteredTodos = todos.filter((todo) => {
-    switch (filter) {
-      case "all":
-        return todo;
-      case "completed":
-        return todo.isCompleted;
-      case "unCompleted":
-        return !todo.isCompleted;
-      default:
-        return todo;
-    }
-  });
+
   const toggleSortOrder = () => {
     const sortedTodos = [...todos].sort((a, b) => {
       const dateA = a.dueDate ? new Date(a.dueDate).getTime() : 0;
@@ -151,9 +151,7 @@ export default function Home() {
             <select
               className={styles.sortBox}
               defaultValue="all"
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                handleFilter(e.target.value as Filter)
-              }
+              onChange={handleOptionChange}
             >
               <option value="all">すべてのタスク</option>
               <option value="completed">完了したタスク</option>
@@ -178,7 +176,7 @@ export default function Home() {
           </div>
           <div>
             <ul className={styles.taskList}>
-              {filteredTodos.map((todo) => (
+              {todos.map((todo) => (
                 <li className={styles.listItems} key={todo.id}>
                   <div className={styles.textContainer}>
                     <input
