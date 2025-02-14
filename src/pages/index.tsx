@@ -103,7 +103,7 @@ export default function Home() {
 
   const toggleSortOrder = () => {
     const saveTodos = localStorage.getItem("todoArray");
-    if (!saveTodos) return [];
+    if (!saveTodos) return;
     const parsedTodos: Todo[] = JSON.parse(saveTodos);
     const sortedTodos = [...parsedTodos].sort((a, b) => {
       const dateA = a.dueDate ? new Date(a.dueDate).getTime() : 0;
@@ -161,7 +161,7 @@ export default function Home() {
             >
               <option value="all">すべてのタスク</option>
               <option value="completed">完了したタスク</option>
-              <option value="unCompleted">現在のタスク</option>
+              <option value="unCompleted">完了していないタスク</option>
             </select>
             <div className={styles.sortOder}>
               <button
