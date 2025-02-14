@@ -85,16 +85,19 @@ export default function Home() {
   const handleOptionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const filterValue = event.target.value as Filter;
 
-    const filterConditions: Record<Filter, (todo: Todo) => boolean> = {
+    const saveTodos = localStorage.getItem("todoArray");
+    if (!saveTodos) return [];
+    const parsedTodos: Todo[] = JSON.parse(saveTodos);
+
+    const filterConditions: Record<Filter, (parsedTodos: Todo) => boolean> = {
       all: () => true,
-      completed: (todo) => todo.isCompleted,
-      unCompleted: (todo) => !todo.isCompleted,
+      completed: (parsedTodos) => parsedTodos.isCompleted,
+      unCompleted: (parsedTodos) => !parsedTodos.isCompleted,
     };
 
-    const filteredTodos = todos.filter(
+    const filteredTodos = parsedTodos.filter(
       filterConditions[filterValue] || (() => true)
     );
-
     setTodos(filteredTodos);
   };
 
