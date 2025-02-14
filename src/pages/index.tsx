@@ -102,7 +102,10 @@ export default function Home() {
   };
 
   const toggleSortOrder = () => {
-    const sortedTodos = [...todos].sort((a, b) => {
+    const saveTodos = localStorage.getItem("todoArray");
+    if (!saveTodos) return [];
+    const parsedTodos: Todo[] = JSON.parse(saveTodos);
+    const sortedTodos = [...parsedTodos].sort((a, b) => {
       const dateA = a.dueDate ? new Date(a.dueDate).getTime() : 0;
       const dateB = b.dueDate ? new Date(b.dueDate).getTime() : 0;
 
