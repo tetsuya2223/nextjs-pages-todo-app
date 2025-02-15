@@ -2,6 +2,7 @@ import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import { formatInTimeZone } from "date-fns-tz";
 import Link from "next/link";
+import { Dialog } from "../components/Dialog";
 
 export type Todo = {
   id: string;
@@ -18,6 +19,8 @@ export default function Home() {
   const [dueDate, setDueDate] = useState("");
   const [todos, setTodos] = useState<Todo[]>([]);
   const [filter, setFilter] = useState<Filter>("all"); // フィルターの状態を保持
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
   useEffect(() => {
     const saveTodos = localStorage.getItem("todoArray");
@@ -99,10 +102,24 @@ export default function Home() {
     e.preventDefault();
   };
 
-  const deleteTodos = (id: string) => {
-    const newTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(newTodos);
+  const confirmDelete = (id: string) => {
+    setDeleteTarget(id);
+    setIsDialogOpen(true);
+  };
+
+  const deleteTodos = () => {
+    if (!deleteTarget) return; // 削除対象がない場合は何もしない
+
+    // 削除対象のIDを除外
+    const newTodos = todos.filter((todo) => todo.id !== deleteTarget);
+
+    // 更新後のデータを適用
     localStorage.setItem("todoArray", JSON.stringify(newTodos));
+    setTodos(applyFilter(filter, newTodos));
+
+    // モーダルを閉じる & 削除対象をリセット
+    setIsDialogOpen(false);
+    setDeleteTarget(null);
   };
 
   const handleOptionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -227,7 +244,7 @@ export default function Home() {
                     <button
                       type="button"
                       className={`${styles.button} ${styles.deleteButton} ${styles.listitem}`}
-                      onClick={() => deleteTodos(todo.id)}
+                      onClick={() => confirmDelete(todo.id)}
                     >
                       削除
                     </button>
@@ -238,6 +255,12 @@ export default function Home() {
           </div>
         </div>
       </div>
+      {/* 削除確認モーダル */}
+      <Dialog
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        onConfirm={deleteTodos}
+      />
     </>
   );
 }
