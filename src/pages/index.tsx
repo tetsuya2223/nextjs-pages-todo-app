@@ -27,18 +27,14 @@ export default function Home() {
     }
   }, []);
 
-  const applyFilter = (filterValue: Filter, todosArray: Todo[]) => {
+  const applyFilter = (filterValue: Filter, todosArray: Todo[]): Todo[] => {
     const filterConditions: Record<Filter, (todo: Todo) => boolean> = {
       all: () => true,
       completed: (todo) => todo.isCompleted,
       unCompleted: (todo) => !todo.isCompleted,
     };
 
-    const filteredTodos = todosArray.filter(
-      filterConditions[filterValue] || (() => true)
-    );
-
-    setTodos(filteredTodos);
+    return todosArray.filter(filterConditions[filterValue] || (() => true));
   };
 
   const changeText = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,11 +61,18 @@ export default function Home() {
         : "",
       isCompleted: false,
     };
+    // `localStorage` のデータを取得
+    const saveTodos = localStorage.getItem("todoArray");
+    const allTodos: Todo[] = saveTodos ? JSON.parse(saveTodos) : [];
 
-    const newTodoArray = [newTodos, ...todos];
+    // 新しいタスクを追加
+    const newTodoArray = [newTodos, ...allTodos];
 
-    setTodos(newTodoArray);
+    // `localStorage` を更新
     localStorage.setItem("todoArray", JSON.stringify(newTodoArray));
+
+    // `applyFilter()` の戻り値を `setTodos()` に渡す
+    setTodos(applyFilter(filter, newTodoArray));
 
     setText("");
     setDueDate("");
@@ -85,12 +88,11 @@ export default function Home() {
       item.id === id ? { ...item, isCompleted: !item.isCompleted } : item
     );
 
+    // 更新したタスクリストを localStorage に保存
     localStorage.setItem("todoArray", JSON.stringify(updatedTodos));
 
-    setFilter((prevFilter) => {
-      applyFilter(prevFilter, updatedTodos);
-      return prevFilter;
-    });
+    // フィルターを適用して `setTodos` を更新
+    setTodos(applyFilter(filter, updatedTodos));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -111,7 +113,7 @@ export default function Home() {
     if (!saveTodos) return;
 
     const parsedTodos: Todo[] = JSON.parse(saveTodos);
-    applyFilter(filterValue, parsedTodos);
+    setTodos(applyFilter(filterValue, parsedTodos));
   };
 
   const toggleSortOrder = () => {
@@ -125,7 +127,7 @@ export default function Home() {
       return dateA - dateB;
     });
 
-    applyFilter(filter, sortedTodos);
+    setTodos(applyFilter(filter, sortedTodos));
   };
 
   const toggleSortOrderDesc = () => {
@@ -139,7 +141,7 @@ export default function Home() {
       return dateB - dateA;
     });
 
-    applyFilter(filter, sortedTodos);
+    setTodos(applyFilter(filter, sortedTodos));
   };
 
   return (
