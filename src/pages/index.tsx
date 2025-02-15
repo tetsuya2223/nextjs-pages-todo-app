@@ -17,6 +17,7 @@ export default function Home() {
   const [text, setText] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [filter, setFilter] = useState<Filter>("all"); // フィルターの状態を保持
 
   useEffect(() => {
     const saveTodos = localStorage.getItem("todoArray");
@@ -25,6 +26,16 @@ export default function Home() {
       setTodos(JSON.parse(saveTodos));
     }
   }, []);
+
+  const applyFilter = (filterValue: Filter, todosArray: Todo[]): Todo[] => {
+    const filterConditions: Record<Filter, (todo: Todo) => boolean> = {
+      all: () => true,
+      completed: (todo) => todo.isCompleted,
+      unCompleted: (todo) => !todo.isCompleted,
+    };
+
+    return todosArray.filter(filterConditions[filterValue] || (() => true));
+  };
 
   const changeText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -50,26 +61,38 @@ export default function Home() {
         : "",
       isCompleted: false,
     };
+    // `localStorage` のデータを取得
+    const saveTodos = localStorage.getItem("todoArray");
+    const allTodos: Todo[] = saveTodos ? JSON.parse(saveTodos) : [];
 
-    const newTodoArray = [newTodos, ...todos];
+    // 新しいタスクを追加
+    const newTodoArray = [newTodos, ...allTodos];
 
-    setTodos(newTodoArray);
+    // `localStorage` を更新
     localStorage.setItem("todoArray", JSON.stringify(newTodoArray));
+
+    // `applyFilter()` の戻り値を `setTodos()` に渡す
+    setTodos(applyFilter(filter, newTodoArray));
 
     setText("");
     setDueDate("");
   };
 
   const toggleCompleted = (id: string) => {
-    setTodos((prevTodos) => {
-      const updatedTodos = prevTodos.map((item) =>
-        item.id === id ? { ...item, isCompleted: !item.isCompleted } : item
-      );
+    const saveTodos = localStorage.getItem("todoArray");
+    if (!saveTodos) return;
 
-      localStorage.setItem("todoArray", JSON.stringify(updatedTodos));
+    const allTodos: Todo[] = JSON.parse(saveTodos);
 
-      return updatedTodos;
-    });
+    const updatedTodos = allTodos.map((item) =>
+      item.id === id ? { ...item, isCompleted: !item.isCompleted } : item
+    );
+
+    // 更新したタスクリストを localStorage に保存
+    localStorage.setItem("todoArray", JSON.stringify(updatedTodos));
+
+    // フィルターを適用して `setTodos` を更新
+    setTodos(applyFilter(filter, updatedTodos));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -84,47 +107,43 @@ export default function Home() {
 
   const handleOptionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const filterValue = event.target.value as Filter;
+    setFilter(filterValue);
 
     const saveTodos = localStorage.getItem("todoArray");
     if (!saveTodos) return;
+
     const parsedTodos: Todo[] = JSON.parse(saveTodos);
-
-    const filterConditions: Record<Filter, (parsedTodos: Todo) => boolean> = {
-      all: () => true,
-      completed: (parsedTodos) => parsedTodos.isCompleted,
-      unCompleted: (parsedTodos) => !parsedTodos.isCompleted,
-    };
-
-    const filteredTodos = parsedTodos.filter(
-      filterConditions[filterValue] || (() => true)
-    );
-    setTodos(filteredTodos);
+    setTodos(applyFilter(filterValue, parsedTodos));
   };
 
   const toggleSortOrder = () => {
     const saveTodos = localStorage.getItem("todoArray");
     if (!saveTodos) return;
+
     const parsedTodos: Todo[] = JSON.parse(saveTodos);
-    const sortedTodos = [...parsedTodos].sort((a, b) => {
+    const sortedTodos = parsedTodos.sort((a, b) => {
       const dateA = a.dueDate ? new Date(a.dueDate).getTime() : 0;
       const dateB = b.dueDate ? new Date(b.dueDate).getTime() : 0;
-
-      return dateA - dateB; // 昇順
+      return dateA - dateB;
     });
 
-    setTodos(sortedTodos);
+    setTodos(applyFilter(filter, sortedTodos));
   };
 
   const toggleSortOrderDesc = () => {
-    const sortedTodos = [...todos].sort((a, b) => {
+    const saveTodos = localStorage.getItem("todoArray");
+    if (!saveTodos) return;
+
+    const parsedTodos: Todo[] = JSON.parse(saveTodos);
+    const sortedTodos = parsedTodos.sort((a, b) => {
       const dateA = a.dueDate ? new Date(a.dueDate).getTime() : 0;
       const dateB = b.dueDate ? new Date(b.dueDate).getTime() : 0;
-
-      return dateB - dateA; // 降順
+      return dateB - dateA;
     });
 
-    setTodos(sortedTodos);
+    setTodos(applyFilter(filter, sortedTodos));
   };
+
   return (
     <>
       <h1 className={styles.title}>TODOリスト</h1>
