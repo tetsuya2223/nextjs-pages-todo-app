@@ -86,7 +86,7 @@ export default function Home() {
     const filterValue = event.target.value as Filter;
 
     const saveTodos = localStorage.getItem("todoArray");
-    if (!saveTodos) return [];
+    if (!saveTodos) return;
     const parsedTodos: Todo[] = JSON.parse(saveTodos);
 
     const filterConditions: Record<Filter, (parsedTodos: Todo) => boolean> = {
