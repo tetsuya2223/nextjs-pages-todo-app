@@ -11,6 +11,8 @@ export type Todo = {
   isCompleted: boolean;
 };
 
+type Filter = "all" | "completed" | "unCompleted";
+
 export default function Home() {
   const [text, setText] = useState("");
   const [dueDate, setDueDate] = useState("");
@@ -18,6 +20,7 @@ export default function Home() {
 
   useEffect(() => {
     const saveTodos = localStorage.getItem("todoArray");
+
     if (saveTodos) {
       setTodos(JSON.parse(saveTodos));
     }
@@ -79,6 +82,49 @@ export default function Home() {
     localStorage.setItem("todoArray", JSON.stringify(newTodos));
   };
 
+  const handleOptionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const filterValue = event.target.value as Filter;
+
+    const saveTodos = localStorage.getItem("todoArray");
+    if (!saveTodos) return;
+    const parsedTodos: Todo[] = JSON.parse(saveTodos);
+
+    const filterConditions: Record<Filter, (parsedTodos: Todo) => boolean> = {
+      all: () => true,
+      completed: (parsedTodos) => parsedTodos.isCompleted,
+      unCompleted: (parsedTodos) => !parsedTodos.isCompleted,
+    };
+
+    const filteredTodos = parsedTodos.filter(
+      filterConditions[filterValue] || (() => true)
+    );
+    setTodos(filteredTodos);
+  };
+
+  const toggleSortOrder = () => {
+    const saveTodos = localStorage.getItem("todoArray");
+    if (!saveTodos) return;
+    const parsedTodos: Todo[] = JSON.parse(saveTodos);
+    const sortedTodos = [...parsedTodos].sort((a, b) => {
+      const dateA = a.dueDate ? new Date(a.dueDate).getTime() : 0;
+      const dateB = b.dueDate ? new Date(b.dueDate).getTime() : 0;
+
+      return dateA - dateB; // 昇順
+    });
+
+    setTodos(sortedTodos);
+  };
+
+  const toggleSortOrderDesc = () => {
+    const sortedTodos = [...todos].sort((a, b) => {
+      const dateA = a.dueDate ? new Date(a.dueDate).getTime() : 0;
+      const dateB = b.dueDate ? new Date(b.dueDate).getTime() : 0;
+
+      return dateB - dateA; // 降順
+    });
+
+    setTodos(sortedTodos);
+  };
   return (
     <>
       <h1 className={styles.title}>TODOリスト</h1>
@@ -105,42 +151,72 @@ export default function Home() {
             </button>
           </div>
         </form>
-        <div>
-          <ul className={styles.taskList}>
-            {todos.map((todo) => (
-              <li className={styles.listItems} key={todo.id}>
-                <div className={styles.textContainer}>
-                  <input
-                    type="checkbox"
-                    className={styles.checkbox}
-                    onChange={() => toggleCompleted(todo.id)}
-                    checked={todo.isCompleted}
-                  />
-                  <Link href={`/${todo.id}`}>
-                    <p
-                      className={`${styles.listItemText} ${styles.listitem} ${
-                        todo.isCompleted ? styles.listItemTextComped : ""
-                      }`}
-                    >
-                      {todo.text}
-                    </p>
-                  </Link>
-                </div>
-                {/* 今後、リストの表示方法は修正します。 */}
-                <div className={styles.btnContainer}>
-                  <p className={styles.inputDate}>{todo.dueDate}</p>
 
-                  <button
-                    type="button"
-                    className={`${styles.button} ${styles.deleteButton} ${styles.listitem}`}
-                    onClick={() => deleteTodos(todo.id)}
-                  >
-                    削除
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
+        <div className={styles.ListContainer}>
+          <div className={styles.sortContainer}>
+            <select
+              className={styles.sortBox}
+              defaultValue="all"
+              onChange={handleOptionChange}
+            >
+              <option value="all">すべてのタスク</option>
+              <option value="completed">完了したタスク</option>
+              <option value="unCompleted">完了していないタスク</option>
+            </select>
+            <div className={styles.sortOder}>
+              <button
+                type="button"
+                className={`${styles.button} ${styles.sortButton}`}
+                onClick={toggleSortOrder}
+              >
+                昇順
+              </button>
+              <button
+                type="button"
+                className={`${styles.button} ${styles.sortButton}`}
+                onClick={toggleSortOrderDesc}
+              >
+                降順
+              </button>
+            </div>
+          </div>
+          <div>
+            <ul className={styles.taskList}>
+              {todos.map((todo) => (
+                <li className={styles.listItems} key={todo.id}>
+                  <div className={styles.textContainer}>
+                    <input
+                      type="checkbox"
+                      className={styles.checkbox}
+                      onChange={() => toggleCompleted(todo.id)}
+                      checked={todo.isCompleted}
+                    />
+                    <Link href={`/${todo.id}`}>
+                      <p
+                        className={`${styles.listItemText} ${styles.listitem} ${
+                          todo.isCompleted ? styles.listItemTextComped : ""
+                        }`}
+                      >
+                        {todo.text}
+                      </p>
+                    </Link>
+                  </div>
+                  {/* 今後、リストの表示方法は修正します。 */}
+                  <div className={styles.btnContainer}>
+                    <p className={styles.inputDate}>{todo.dueDate}</p>
+
+                    <button
+                      type="button"
+                      className={`${styles.button} ${styles.deleteButton} ${styles.listitem}`}
+                      onClick={() => deleteTodos(todo.id)}
+                    >
+                      削除
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </>
