@@ -257,6 +257,8 @@ export default function Home() {
       </div>
       {/* 削除確認モーダル */}
       <Dialog
+        title="タスクを削除しますか？"
+        yesButtonText="削除する"
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         onConfirm={deleteTodos}
