@@ -28,19 +28,6 @@ const TodoDetails = () => {
     type: "success" as "success" | "error",
   });
 
-  // toastの開閉を実現する関数、後ほど下に移動。
-  const showToast = (type: "success" | "error") => {
-    setToast((prev) => ({
-      ...prev,
-      isOpen: true,
-      type,
-      message: type === "success" ? "成功しました" : "失敗しました。",
-    }));
-    setTimeout(() => {
-      setToast((prev) => ({ ...prev, isOpen: false }));
-    }, 3000);
-  };
-
   // textを変更するための関数
   const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
@@ -136,6 +123,18 @@ const TodoDetails = () => {
 
     setTodo({ isLoading: false, data: findTodo });
   }, [id, router.isReady]);
+
+  const showToast = (type: "success" | "error") => {
+    setToast((prev) => ({
+      ...prev,
+      isOpen: true,
+      type,
+      message: type === "success" ? "成功しました" : "失敗しました。",
+    }));
+    setTimeout(() => {
+      setToast((prev) => ({ ...prev, isOpen: false }));
+    }, 3000);
+  };
 
   // 1. データ通信中の場合
   if (todo.isLoading) {
