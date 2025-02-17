@@ -4,6 +4,7 @@ import type { Todo } from "./index.tsx";
 import detailsStyles from "../styles/detail.module.css";
 import Link from "next/link";
 import { Toast } from "../components/Toast";
+import { error } from "node:console";
 
 // データ保存はボタンを1つだけ設置し、まとめて管理。
 type TodoData = {
@@ -21,6 +22,17 @@ const TodoDetails = () => {
   const { id } = router.query;
 
   const [todo, setTodo] = useState<TodoData>(defaultValue);
+
+  const [toast, setToast] = useState({
+    isOpen: false,
+    message: "",
+    type: "success" as "success" | "error",
+  });
+
+  // toastの開閉を実現する関数、後ほど下に移動。
+  const showToast = (type: "success" | "error") => {
+    return null;
+  };
 
   // textを変更するための関数
   const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
@@ -233,13 +245,13 @@ const TodoDetails = () => {
             const savedTodos = localStorage.getItem("todoArray");
 
             if (!savedTodos) {
-              alert("TODO:失敗toastを出す");
+              showToast("error");
               return;
             }
             const parsedTodos = JSON.parse(savedTodos) as Todo[];
 
             if (!todo.data) {
-              alert("TODO:失敗toastを出す");
+              showToast("error");
               return;
             }
 
@@ -253,13 +265,14 @@ const TodoDetails = () => {
 
             localStorage.setItem("todoArray", JSON.stringify(newTodoArray));
 
-            alert("TODO:成功toastを出す");
+            showToast("success");
           }}
         >
           変更内容を保存する
         </button>
       </div>
-      <Toast />
+      {/* toastコンポーネントに渡すpropsを追加*/}
+      <Toast isOpen={toast.isOpen} message={toast.message} type={toast.type} />
     </>
   );
 };
