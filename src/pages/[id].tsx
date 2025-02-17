@@ -3,6 +3,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import type { Todo } from "./index.tsx";
 import detailsStyles from "../styles/detail.module.css";
 import Link from "next/link";
+import { Toast } from "../components/Toast";
 
 // データ保存はボタンを1つだけ設置し、まとめて管理。
 type TodoData = {
@@ -20,6 +21,12 @@ const TodoDetails = () => {
   const { id } = router.query;
 
   const [todo, setTodo] = useState<TodoData>(defaultValue);
+
+  const [toast, setToast] = useState({
+    isOpen: false,
+    message: "",
+    type: "success" as "success" | "error",
+  });
 
   // textを変更するための関数
   const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
@@ -117,6 +124,18 @@ const TodoDetails = () => {
     setTodo({ isLoading: false, data: findTodo });
   }, [id, router.isReady]);
 
+  const showToast = (type: "success" | "error") => {
+    setToast((prev) => ({
+      ...prev,
+      isOpen: true,
+      type,
+      message: type === "success" ? "成功しました" : "失敗しました。",
+    }));
+    setTimeout(() => {
+      setToast((prev) => ({ ...prev, isOpen: false }));
+    }, 3000);
+  };
+
   // 1. データ通信中の場合
   if (todo.isLoading) {
     return <div className={detailsStyles.detailContainer}>通信中...</div>;
@@ -139,116 +158,128 @@ const TodoDetails = () => {
 
   // 3. データ通信が完了し、データが存在していた場合（data が null でない場合）
   return (
-    <div className={detailsStyles.detailContainer}>
-      <h1 className={detailsStyles.detailHeader}>TODOタスク詳細</h1>
+    <>
+      <div className={detailsStyles.detailContainer}>
+        <h1 className={detailsStyles.detailHeader}>TODOタスク詳細</h1>
 
-      <div className={detailsStyles.detailList}>
-        <div className={detailsStyles.detailListItem}>
-          <div className={detailsStyles.textContainer}>
-            <label htmlFor="taskInput" className={detailsStyles.itemHeading}>
-              タスク:
-            </label>
-            <input
-              type="text"
-              id="taskInput"
-              placeholder="タスクを入力"
-              style={{ border: "1px solid gray" }}
-              value={todo.data.text}
-              onChange={handleChangeText}
-            />
+        <div className={detailsStyles.detailList}>
+          <div className={detailsStyles.detailListItem}>
+            <div className={detailsStyles.textContainer}>
+              <label htmlFor="taskInput" className={detailsStyles.itemHeading}>
+                タスク:
+              </label>
+              <input
+                type="text"
+                id="taskInput"
+                placeholder="タスクを入力"
+                style={{ border: "1px solid gray" }}
+                value={todo.data.text}
+                onChange={handleChangeText}
+              />
+            </div>
+          </div>
+
+          <div className={detailsStyles.detailListItem}>
+            <div className={detailsStyles.detailTextContainer}>
+              <label htmlFor="detailText" className={detailsStyles.itemHeading}>
+                タスク詳細:
+              </label>
+              <textarea
+                className={detailsStyles.detailTextarea}
+                name=""
+                id="detailText"
+                rows={5}
+                placeholder="詳細を入力してください"
+                maxLength={500}
+                value={todo.data.detail}
+                onChange={handleChangeDetailText}
+              />
+            </div>
+          </div>
+
+          <div className={detailsStyles.detailListItem}>
+            <div className={detailsStyles.textContainer}>
+              <label htmlFor="dueDate" className={detailsStyles.itemHeading}>
+                締め切り日:
+              </label>
+              <input
+                type="date"
+                id="dueDate"
+                value={todo.data.dueDate}
+                onChange={handleAssignDate}
+              />
+            </div>
+          </div>
+
+          <div className={detailsStyles.detailListItem}>
+            <div className={detailsStyles.textContainer}>
+              <span className={detailsStyles.itemHeading}>状態:</span>
+              <input
+                // 完了/未完了の状態切替にチェックボックスを使用
+                type="checkbox"
+                id="isCompleted"
+                className={detailsStyles.checkbox}
+                // isCompleted が true ならチェックが入る
+                checked={todo.data.isCompleted}
+                onChange={handleCompleted}
+              />
+              <label htmlFor="isCompleted">
+                {todo.data.isCompleted ? "完了" : "未完了"}
+              </label>
+            </div>
           </div>
         </div>
 
-        <div className={detailsStyles.detailListItem}>
-          <div className={detailsStyles.detailTextContainer}>
-            <label htmlFor="detailText" className={detailsStyles.itemHeading}>
-              タスク詳細:
-            </label>
-            <textarea
-              className={detailsStyles.detailTextarea}
-              name=""
-              id="detailText"
-              rows={5}
-              placeholder="詳細を入力してください"
-              maxLength={500}
-              value={todo.data.detail}
-              onChange={handleChangeDetailText}
-            />
-          </div>
-        </div>
+        <Link
+          href="/"
+          className={`${detailsStyles.button} ${detailsStyles.returnButton}`}
+        >
+          ホームに戻る
+        </Link>
 
-        <div className={detailsStyles.detailListItem}>
-          <div className={detailsStyles.textContainer}>
-            <label htmlFor="dueDate" className={detailsStyles.itemHeading}>
-              締め切り日:
-            </label>
-            <input
-              type="date"
-              id="dueDate"
-              value={todo.data.dueDate}
-              onChange={handleAssignDate}
-            />
-          </div>
-        </div>
+        <button
+          type="button"
+          className={`${detailsStyles.button} ${detailsStyles.deleteButton}`}
+        >
+          タスクを削除する
+        </button>
 
-        <div className={detailsStyles.detailListItem}>
-          <div className={detailsStyles.textContainer}>
-            <span className={detailsStyles.itemHeading}>状態:</span>
-            <input
-              // 完了/未完了の状態切替にチェックボックスを使用
-              type="checkbox"
-              id="isCompleted"
-              className={detailsStyles.checkbox}
-              // isCompleted が true ならチェックが入る
-              checked={todo.data.isCompleted}
-              onChange={handleCompleted}
-            />
-            <label htmlFor="isCompleted">
-              {todo.data.isCompleted ? "完了" : "未完了"}
-            </label>
-          </div>
-        </div>
-      </div>
+        <button //保存ボタンを押すまではデータベース（ここではlocalstorage）へデータは保存しない。
+          type="button"
+          className={`${detailsStyles.button} ${detailsStyles.editButton}`}
+          onClick={() => {
+            const savedTodos = localStorage.getItem("todoArray");
 
-      <Link
-        href="/"
-        className={`${detailsStyles.button} ${detailsStyles.returnButton}`}
-      >
-        ホームに戻る
-      </Link>
+            if (!savedTodos) {
+              showToast("error");
+              return;
+            }
+            const parsedTodos = JSON.parse(savedTodos) as Todo[];
 
-      <button
-        type="button"
-        className={`${detailsStyles.button} ${detailsStyles.deleteButton}`}
-      >
-        タスクを削除する
-      </button>
-
-      <button //保存ボタンを押すまではデータベース（ここではlocalstorage）へデータは保存しない。
-        type="button"
-        className={`${detailsStyles.button} ${detailsStyles.editButton}`}
-        onClick={() => {
-          const savedTodos = localStorage.getItem("todoArray");
-
-          if (!savedTodos) return;
-          const parsedTodos = JSON.parse(savedTodos) as Todo[];
-
-          if (!todo.data) return;
-
-          const newTodoArray = parsedTodos.map((item) => {
-            if (item.id === todo.data?.id) {
-              return todo.data;
+            if (!todo.data) {
+              showToast("error");
+              return;
             }
 
-            return item;
-          });
+            const newTodoArray = parsedTodos.map((item) => {
+              if (item.id === todo.data?.id) {
+                return todo.data;
+              }
 
-          localStorage.setItem("todoArray", JSON.stringify(newTodoArray));
-        }}
-      >
-        変更内容を保存する
-      </button>
-    </div>
+              return item;
+            });
+
+            localStorage.setItem("todoArray", JSON.stringify(newTodoArray));
+
+            showToast("success");
+          }}
+        >
+          変更内容を保存する
+        </button>
+      </div>
+      {/* toastコンポーネントに渡すpropsを追加*/}
+      <Toast isOpen={toast.isOpen} message={toast.message} />
+    </>
   );
 };
 
