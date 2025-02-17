@@ -4,7 +4,6 @@ import type { Todo } from "./index.tsx";
 import detailsStyles from "../styles/detail.module.css";
 import Link from "next/link";
 import { Toast } from "../components/Toast";
-import { error } from "node:console";
 
 // データ保存はボタンを1つだけ設置し、まとめて管理。
 type TodoData = {
@@ -31,7 +30,14 @@ const TodoDetails = () => {
 
   // toastの開閉を実現する関数、後ほど下に移動。
   const showToast = (type: "success" | "error") => {
-    return null;
+    setToast({
+      isOpen: true,
+      type,
+      message: type === "success" ? "成功しました" : "失敗しました。",
+    });
+    setTimeout(() => {
+      setToast((prev) => ({ ...prev, isOpen: false }));
+    }, 3000);
   };
 
   // textを変更するための関数
