@@ -244,6 +244,8 @@ const TodoDetails = () => {
           });
 
           localStorage.setItem("todoArray", JSON.stringify(newTodoArray));
+
+          //　ここにtoastを呼び出す処理を書く。
         }}
       >
         変更内容を保存する
