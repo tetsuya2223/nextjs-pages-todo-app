@@ -230,10 +230,16 @@ const TodoDetails = () => {
         onClick={() => {
           const savedTodos = localStorage.getItem("todoArray");
 
-          if (!savedTodos) return;
+          if (!savedTodos) {
+            alert("TODO:失敗toastを出す");
+            return;
+          }
           const parsedTodos = JSON.parse(savedTodos) as Todo[];
 
-          if (!todo.data) return;
+          if (!todo.data) {
+            alert("TODO:失敗toastを出す");
+            return;
+          }
 
           const newTodoArray = parsedTodos.map((item) => {
             if (item.id === todo.data?.id) {
@@ -245,7 +251,7 @@ const TodoDetails = () => {
 
           localStorage.setItem("todoArray", JSON.stringify(newTodoArray));
 
-          //　ここにtoastを呼び出す処理を書く。
+          alert("TODO:成功toastを出す");
         }}
       >
         変更内容を保存する
