@@ -30,11 +30,12 @@ const TodoDetails = () => {
 
   // toastの開閉を実現する関数、後ほど下に移動。
   const showToast = (type: "success" | "error") => {
-    setToast({
+    setToast((prev) => ({
+      ...prev,
       isOpen: true,
       type,
       message: type === "success" ? "成功しました" : "失敗しました。",
-    });
+    }));
     setTimeout(() => {
       setToast((prev) => ({ ...prev, isOpen: false }));
     }, 3000);
