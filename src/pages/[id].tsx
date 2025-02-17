@@ -278,7 +278,7 @@ const TodoDetails = () => {
         </button>
       </div>
       {/* toastコンポーネントに渡すpropsを追加*/}
-      <Toast isOpen={toast.isOpen} message={toast.message} type={toast.type} />
+      <Toast isOpen={toast.isOpen} message={toast.message} />
     </>
   );
 };
