@@ -11,6 +11,12 @@ type TodoData = {
   data: Todo | null;
 };
 
+type ToastState = {
+  isOpen: boolean;
+  message: string;
+  type: "success" | "error";
+};
+
 const defaultValue = {
   isLoading: true,
   data: null,
@@ -22,10 +28,10 @@ const TodoDetails = () => {
 
   const [todo, setTodo] = useState<TodoData>(defaultValue);
 
-  const [toast, setToast] = useState({
+  const [toast, setToast] = useState<ToastState>({
     isOpen: false,
     message: "",
-    type: "success" as "success" | "error",
+    type: "success",
   });
 
   // textを変更するための関数
