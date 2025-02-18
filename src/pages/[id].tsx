@@ -249,6 +249,8 @@ const TodoDetails = () => {
         変更内容を保存する
       </button>
     </div>
+    // ここにDialogコンポーネントを持ってくる
+    // 削除時のダイアログなのでindex.tsxで作成したものをそのまま引用でOK
   );
 };
 
