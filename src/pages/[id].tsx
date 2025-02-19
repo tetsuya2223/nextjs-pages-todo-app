@@ -13,7 +13,6 @@ type TodoData = {
 
 type ToastState = {
   isOpen: boolean;
-  message: string;
   type: "success" | "error";
 };
 
@@ -30,7 +29,6 @@ const TodoDetails = () => {
 
   const [toast, setToast] = useState<ToastState>({
     isOpen: false,
-    message: "",
     type: "success",
   });
 
@@ -135,7 +133,6 @@ const TodoDetails = () => {
       ...prev,
       isOpen: true,
       type,
-      message: type === "success" ? "成功しました" : "失敗しました。",
     }));
     setTimeout(() => {
       setToast((prev) => ({ ...prev, isOpen: false }));
@@ -283,7 +280,7 @@ const TodoDetails = () => {
           変更内容を保存する
         </button>
       </div>
-      <Toast isOpen={toast.isOpen} message={toast.message} type={toast.type} />
+      <Toast isOpen={toast.isOpen} type={toast.type} />
     </>
   );
 };
