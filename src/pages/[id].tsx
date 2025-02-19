@@ -134,9 +134,6 @@ const TodoDetails = () => {
       isOpen: true,
       type,
     }));
-    setTimeout(() => {
-      setToast((prev) => ({ ...prev, isOpen: false }));
-    }, 3000);
   };
 
   // 1. データ通信中の場合
