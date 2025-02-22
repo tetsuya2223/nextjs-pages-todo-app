@@ -1,4 +1,4 @@
-import buttonStyles from "../styles/Home.module.css";
+import buttonStyles from "../styles/button.module.css";
 
 type Props = {
   buttonType: "button" | "submit" | "reset";
@@ -16,9 +16,7 @@ export const Button: React.FC<Props> = ({
   return (
     <button
       type={buttonType}
-      className={`${buttonStyles.button} ${
-        buttonStyles[`button-${buttonType}`]
-      }`}
+      className={`${buttonStyles.button} ${buttonStyles[`button-${variant}`]}`}
       onClick={onClick}
     >
       {text}
