@@ -216,17 +216,18 @@ const TodoDetails = () => {
       >
         ホームに戻る
       </Link>
-
+      {/* Buttonコンポーネントを使用する。 */}
       <button
         type="button"
         className={`${detailsStyles.button} ${detailsStyles.deleteButton}`}
       >
         タスクを削除する
       </button>
-
+      {/* Buttonコンポーネントを使用する。 */}
       <button //保存ボタンを押すまではデータベース（ここではlocalstorage）へデータは保存しない。
         type="button"
         className={`${detailsStyles.button} ${detailsStyles.editButton}`}
+        //この関数は外で定義する。
         onClick={() => {
           const savedTodos = localStorage.getItem("todoArray");
 
