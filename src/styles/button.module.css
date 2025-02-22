@@ -1,0 +1,20 @@
+.button-primary {
+  color: white;
+  background-color: rgb(17, 140, 45);
+}
+
+.button-secondary {
+  color: white;
+  background-color: #e63946;
+}
+
+.button-tertiary {
+  color: black;
+  background-color: rgb(221, 220, 219);
+}
+
+@media (hover: hover) {
+  .button:enabled:hover {
+    opacity: 0.7;
+  }
+}
