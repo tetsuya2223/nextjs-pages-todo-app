@@ -3,6 +3,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import type { Todo } from "./index.tsx";
 import detailsStyles from "../styles/detail.module.css";
 import Link from "next/link";
+import { Button } from "../components/Button";
 
 // データ保存はボタンを1つだけ設置し、まとめて管理。
 type TodoData = {
@@ -117,6 +118,25 @@ const TodoDetails = () => {
     setTodo({ isLoading: false, data: findTodo });
   }, [id, router.isReady]);
 
+  const saveTodo = () => {
+    const savedTodos = localStorage.getItem("todoArray");
+
+    if (!savedTodos) return;
+    const parsedTodos = JSON.parse(savedTodos) as Todo[];
+
+    if (!todo.data) return;
+
+    const newTodoArray = parsedTodos.map((item) => {
+      if (item.id === todo.data?.id) {
+        return todo.data;
+      }
+
+      return item;
+    });
+
+    localStorage.setItem("todoArray", JSON.stringify(newTodoArray));
+  };
+
   // 1. データ通信中の場合
   if (todo.isLoading) {
     return <div className={detailsStyles.detailContainer}>通信中...</div>;
@@ -127,10 +147,7 @@ const TodoDetails = () => {
     return (
       <div className={detailsStyles.detailContainer}>
         <p>タスクが存在しません</p>
-        <Link
-          href="/"
-          className={`${detailsStyles.button} ${detailsStyles.returnButton}`}
-        >
+        <Link href="/" className={detailsStyles.returnLink}>
           ホームに戻る
         </Link>
       </div>
@@ -195,11 +212,9 @@ const TodoDetails = () => {
           <div className={detailsStyles.textContainer}>
             <span className={detailsStyles.itemHeading}>状態:</span>
             <input
-              // 完了/未完了の状態切替にチェックボックスを使用
               type="checkbox"
               id="isCompleted"
               className={detailsStyles.checkbox}
-              // isCompleted が true ならチェックが入る
               checked={todo.data.isCompleted}
               onChange={handleCompleted}
             />
@@ -210,45 +225,22 @@ const TodoDetails = () => {
         </div>
       </div>
 
-      <Link
-        href="/"
-        className={`${detailsStyles.button} ${detailsStyles.returnButton}`}
-      >
+      <Link href="/" className={detailsStyles.returnLink}>
         ホームに戻る
       </Link>
-      {/* Buttonコンポーネントを使用する。 */}
-      <button
-        type="button"
-        className={`${detailsStyles.button} ${detailsStyles.deleteButton}`}
-      >
-        タスクを削除する
-      </button>
-      {/* Buttonコンポーネントを使用する。 */}
-      <button //保存ボタンを押すまではデータベース（ここではlocalstorage）へデータは保存しない。
-        type="button"
-        className={`${detailsStyles.button} ${detailsStyles.editButton}`}
-        //この関数は外で定義する。
-        onClick={() => {
-          const savedTodos = localStorage.getItem("todoArray");
+      <Button
+        buttonType="button"
+        variant="secondary"
+        text="タスクを削除する"
+        // onClick={} 後ほど記述。
+      />
 
-          if (!savedTodos) return;
-          const parsedTodos = JSON.parse(savedTodos) as Todo[];
-
-          if (!todo.data) return;
-
-          const newTodoArray = parsedTodos.map((item) => {
-            if (item.id === todo.data?.id) {
-              return todo.data;
-            }
-
-            return item;
-          });
-
-          localStorage.setItem("todoArray", JSON.stringify(newTodoArray));
-        }}
-      >
-        変更内容を保存する
-      </button>
+      <Button
+        buttonType="button"
+        variant="primary"
+        text="変更内容を保存する"
+        onClick={saveTodo}
+      />
     </div>
   );
 };

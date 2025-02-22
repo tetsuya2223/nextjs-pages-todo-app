@@ -58,3 +58,14 @@
 .checkbox {
   -webkit-appearance: "auto";
 }
+
+.returnLink {
+  padding: 5px 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  flex-shrink: 0;
+  color: black;
+  background-color: rgb(221, 220, 219);
+}
