@@ -179,7 +179,6 @@ export default function Home() {
             />
             <p>締め切り日：</p>
             <input type="date" value={dueDate} onChange={assignDueDate} />
-            {/* Buttonコンポーネントを使用する。 */}
             <Button
               buttonType="submit"
               variant="primary"
@@ -201,22 +200,19 @@ export default function Home() {
               <option value="unCompleted">完了していないタスク</option>
             </select>
             <div className={styles.sortOder}>
-              {/* Buttonコンポーネントを使用する。 */}
-              <button
-                type="button"
-                className={`${styles.button} ${styles.sortButton}`}
+              <Button
+                buttonType="button"
+                variant="tertiary"
+                text="昇順"
                 onClick={toggleSortOrder}
-              >
-                昇順
-              </button>
-              {/* Buttonコンポーネントを使用する。 */}
-              <button
-                type="button"
-                className={`${styles.button} ${styles.sortButton}`}
+              />
+
+              <Button
+                buttonType="button"
+                variant="tertiary"
+                text="降順"
                 onClick={toggleSortOrderDesc}
-              >
-                降順
-              </button>
+              />
             </div>
           </div>
           <div>
@@ -240,18 +236,15 @@ export default function Home() {
                       </p>
                     </Link>
                   </div>
-                  {/* 今後、リストの表示方法は修正します。 */}
                   <div className={styles.btnContainer}>
                     <p className={styles.inputDate}>{todo.dueDate}</p>
 
-                    {/* Buttonコンポーネントを使用する。 */}
-                    <button
-                      type="button"
-                      className={`${styles.button} ${styles.deleteButton} ${styles.listitem}`}
+                    <Button
+                      buttonType="button"
+                      variant="secondary"
+                      text="削除"
                       onClick={() => confirmDelete(todo.id)}
-                    >
-                      削除
-                    </button>
+                    />
                   </div>
                 </li>
               ))}
@@ -259,7 +252,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {/* 削除確認モーダル */}
       <Dialog
         title="タスクを削除しますか？"
         yesButtonText="削除する"
