@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { formatInTimeZone } from "date-fns-tz";
 import Link from "next/link";
 import { Dialog } from "../components/Dialog";
+import { useDialog } from "../contexts/DialogContext";
 
 export type Todo = {
   id: string;
@@ -19,8 +20,8 @@ export default function Home() {
   const [dueDate, setDueDate] = useState("");
   const [todos, setTodos] = useState<Todo[]>([]);
   const [filter, setFilter] = useState<Filter>("all"); // フィルターの状態を保持
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+
+  const { openDialog, closeDialog } = useDialog();
 
   useEffect(() => {
     const saveTodos = localStorage.getItem("todoArray");
@@ -103,23 +104,21 @@ export default function Home() {
   };
 
   const confirmDelete = (id: string) => {
-    setDeleteTarget(id);
-    setIsDialogOpen(true);
+    openDialog(
+      "タスクを削除しますか？",
+      "削除する",
+      () => () => deleteTodos(id)
+    );
   };
 
-  const deleteTodos = () => {
-    if (!deleteTarget) return; // 削除対象がない場合は何もしない
+  const deleteTodos = (id: string) => {
+    if (!id) return;
+    const newTodos = todos.filter((todo) => todo.id !== id);
 
-    // 削除対象のIDを除外
-    const newTodos = todos.filter((todo) => todo.id !== deleteTarget);
-
-    // 更新後のデータを適用
     localStorage.setItem("todoArray", JSON.stringify(newTodos));
     setTodos(applyFilter(filter, newTodos));
 
-    // モーダルを閉じる & 削除対象をリセット
-    setIsDialogOpen(false);
-    setDeleteTarget(null);
+    closeDialog();
   };
 
   const handleOptionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -256,13 +255,7 @@ export default function Home() {
         </div>
       </div>
       {/* 削除確認モーダル */}
-      <Dialog
-        title="タスクを削除しますか？"
-        yesButtonText="削除する"
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        onConfirm={deleteTodos}
-      />
+      <Dialog />
     </>
   );
 }

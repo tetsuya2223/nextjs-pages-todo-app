@@ -39,12 +39,12 @@
   background-color: #e5e7eb;
 }
 
-.deleteButton {
+.yesButton {
   background-color: #ef4444;
   color: white;
 }
 
-.deleteButton:hover,
-.deleteButton:focus {
+.yesButton:hover,
+.yesButton:focus {
   background-color: #dc2626;
 }
