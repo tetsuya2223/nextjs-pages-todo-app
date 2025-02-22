@@ -57,6 +57,7 @@
 
 .checkbox {
   -webkit-appearance: "auto";
+  appearance: auto;
 }
 
 .button {
