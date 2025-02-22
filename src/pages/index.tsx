@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { formatInTimeZone } from "date-fns-tz";
 import Link from "next/link";
 import { Dialog } from "../components/Dialog";
+import { Button } from "../components/Button";
 
 export type Todo = {
   id: string;
@@ -179,13 +180,12 @@ export default function Home() {
             <p>締め切り日：</p>
             <input type="date" value={dueDate} onChange={assignDueDate} />
             {/* Buttonコンポーネントを使用する。 */}
-            <button
-              type="submit"
-              className={`${styles.button} ${styles.addButton}`}
+            <Button
+              buttonType="submit"
+              variant="primary"
+              text="登録"
               onClick={addTodos}
-            >
-              登録
-            </button>
+            />
           </div>
         </form>
 
