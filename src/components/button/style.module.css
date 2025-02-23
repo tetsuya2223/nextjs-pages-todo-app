@@ -1,0 +1,31 @@
+.button {
+  padding: 5px 10px;
+  font-size: 14px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  flex-shrink: 0;
+}
+
+.primary {
+  color: white;
+  background-color: rgb(17, 140, 45);
+}
+
+.secondary {
+  color: white;
+  background-color: #e63946;
+}
+
+.tertiary {
+  color: black;
+  background-color: rgb(221, 220, 219);
+}
+
+@media (hover: hover) {
+  .button:enabled:hover {
+    opacity: 0.7;
+  }
+}
