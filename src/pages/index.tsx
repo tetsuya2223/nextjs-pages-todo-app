@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { formatInTimeZone } from "date-fns-tz";
 import Link from "next/link";
 import { Dialog } from "../components/Dialog";
-import { Button } from "../components/Button";
+import { Button } from "../components/button/Button";
 
 export type Todo = {
   id: string;

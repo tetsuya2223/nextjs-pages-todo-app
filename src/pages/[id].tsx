@@ -3,7 +3,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import type { Todo } from "./index.tsx";
 import detailsStyles from "../styles/detail.module.css";
 import Link from "next/link";
-import { Button } from "../components/Button";
+import { Button } from "../components/button/Button.jsx";
 
 // データ保存はボタンを1つだけ設置し、まとめて管理。
 type TodoData = {
