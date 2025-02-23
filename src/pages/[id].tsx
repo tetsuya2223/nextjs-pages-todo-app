@@ -228,19 +228,12 @@ const TodoDetails = () => {
       <Link href="/" className={detailsStyles.returnLink}>
         ホームに戻る
       </Link>
-      <Button
-        buttonType="button"
-        variant="secondary"
-        text="タスクを削除する"
-        // onClick={} 後ほど記述。
-      />
+      {/* onClickは後ほど記述 */}
+      <Button variant="secondary">タスクを削除する</Button>
 
-      <Button
-        buttonType="button"
-        variant="primary"
-        text="変更内容を保存する"
-        onClick={saveTodo}
-      />
+      <Button variant="primary" onClick={saveTodo}>
+        変更内容を保存する
+      </Button>
     </div>
   );
 };

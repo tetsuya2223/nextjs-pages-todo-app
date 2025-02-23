@@ -9,17 +9,17 @@
   flex-shrink: 0;
 }
 
-.button-primary {
+.primary {
   color: white;
   background-color: rgb(17, 140, 45);
 }
 
-.button-secondary {
+.secondary {
   color: white;
   background-color: #e63946;
 }
 
-.button-tertiary {
+.tertiary {
   color: black;
   background-color: rgb(221, 220, 219);
 }

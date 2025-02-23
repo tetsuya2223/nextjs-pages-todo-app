@@ -1,5 +1,6 @@
 import { useRef, useEffect } from "react";
 import dialogStyles from "../styles/dialog.module.css";
+import { Button } from "./button/Button";
 
 type Props = {
   title: string;
@@ -37,20 +38,13 @@ export const Dialog: React.FC<Props> = ({
     <dialog ref={dialogRef} className={dialogStyles.dialog}>
       <p>{title}</p>
       <div className={dialogStyles.dialogButtons}>
-        <button
-          type="button"
-          className={dialogStyles.cancelButton}
-          onClick={onClose}
-        >
+        <Button variant="tertiary" onClick={onClose}>
           キャンセル
-        </button>
-        <button
-          type="button"
-          className={dialogStyles.deleteButton}
-          onClick={onConfirm}
-        >
+        </Button>
+
+        <Button variant="secondary" onClick={onConfirm}>
           {yesButtonText}
-        </button>
+        </Button>
       </div>
     </dialog>
   );

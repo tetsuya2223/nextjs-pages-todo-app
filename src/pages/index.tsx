@@ -179,12 +179,9 @@ export default function Home() {
             />
             <p>締め切り日：</p>
             <input type="date" value={dueDate} onChange={assignDueDate} />
-            <Button
-              buttonType="submit"
-              variant="primary"
-              text="登録"
-              onClick={addTodos}
-            />
+            <Button variant="primary" onClick={addTodos}>
+              登録
+            </Button>
           </div>
         </form>
 
@@ -200,19 +197,13 @@ export default function Home() {
               <option value="unCompleted">完了していないタスク</option>
             </select>
             <div className={styles.sortOder}>
-              <Button
-                buttonType="button"
-                variant="tertiary"
-                text="昇順"
-                onClick={toggleSortOrder}
-              />
+              <Button variant="tertiary" onClick={toggleSortOrder}>
+                昇順
+              </Button>
 
-              <Button
-                buttonType="button"
-                variant="tertiary"
-                text="降順"
-                onClick={toggleSortOrderDesc}
-              />
+              <Button variant="tertiary" onClick={toggleSortOrderDesc}>
+                降順
+              </Button>
             </div>
           </div>
           <div>
@@ -240,11 +231,11 @@ export default function Home() {
                     <p className={styles.inputDate}>{todo.dueDate}</p>
 
                     <Button
-                      buttonType="button"
                       variant="secondary"
-                      text="削除"
                       onClick={() => confirmDelete(todo.id)}
-                    />
+                    >
+                      削除
+                    </Button>
                   </div>
                 </li>
               ))}

@@ -1,24 +1,20 @@
 import buttonStyles from "./button.module.css";
-type Props = {
-  buttonType: "button" | "submit" | "reset";
-  variant?: "primary" | "secondary" | "tertiary"; //?: 使用しなくても良い
-  text: string;
-  onClick?: () => void;
+
+type ButtonProps = React.ComponentProps<"button"> & {
+  variant?: "primary" | "secondary" | "tertiary";
 };
 
-export const Button: React.FC<Props> = ({
-  buttonType,
-  variant = "tertiary", // 指定しなければ"tertiary"
-  text,
-  onClick,
+export const Button: React.FC<ButtonProps> = ({
+  variant = "tertiary",
+  type = "button",
+  ...props
 }) => {
   return (
     <button
-      type={buttonType}
-      className={`${buttonStyles.button} ${buttonStyles[`button-${variant}`]}`}
-      onClick={onClick}
+      {...props}
+      className={`${buttonStyles.button} ${buttonStyles[variant]}`}
     >
-      {text}
+      {props.children}
     </button>
   );
 };
