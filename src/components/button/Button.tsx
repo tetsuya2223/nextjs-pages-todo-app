@@ -1,5 +1,4 @@
-import buttonStyles from "../styles/button.module.css";
-
+import buttonStyles from "./button.module.css";
 type Props = {
   buttonType: "button" | "submit" | "reset";
   variant?: "primary" | "secondary" | "tertiary"; //?: 使用しなくても良い
