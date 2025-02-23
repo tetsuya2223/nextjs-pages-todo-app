@@ -1,8 +1,12 @@
+import { ComponentProps } from "react";
 import buttonStyles from "./button.module.css";
 
-type ButtonProps = React.ComponentProps<"button"> & {
+type ButtonProps = {
+  /** @default "tertiary" */
   variant?: "primary" | "secondary" | "tertiary";
-};
+  /** @default "button" */
+  type?: ComponentProps<"button">["type"];
+} & Omit<ComponentProps<"button">, "type" | "className">;
 
 export const Button: React.FC<ButtonProps> = ({
   variant = "tertiary",
@@ -11,8 +15,8 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button
-      type={type}
       {...props}
+      type={type}
       className={`${buttonStyles.button} ${buttonStyles[variant]}`}
     >
       {props.children}
