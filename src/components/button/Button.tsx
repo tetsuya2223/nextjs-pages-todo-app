@@ -11,6 +11,7 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button
+      type={type}
       {...props}
       className={`${buttonStyles.button} ${buttonStyles[variant]}`}
     >
