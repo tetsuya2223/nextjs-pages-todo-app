@@ -2,8 +2,9 @@ import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import { formatInTimeZone } from "date-fns-tz";
 import Link from "next/link";
-import { Dialog } from "../components/Dialog";
 import { useDialog } from "../contexts/DialogContext";
+import { Dialog } from "../components/dialog";
+import { Button } from "../components/button";
 
 export type Todo = {
   id: string;
@@ -177,13 +178,9 @@ export default function Home() {
             />
             <p>締め切り日：</p>
             <input type="date" value={dueDate} onChange={assignDueDate} />
-            <button
-              type="submit"
-              className={`${styles.button} ${styles.addButton}`}
-              onClick={addTodos}
-            >
+            <Button variant="primary" onClick={addTodos}>
               登録
-            </button>
+            </Button>
           </div>
         </form>
 
@@ -199,20 +196,13 @@ export default function Home() {
               <option value="unCompleted">完了していないタスク</option>
             </select>
             <div className={styles.sortOder}>
-              <button
-                type="button"
-                className={`${styles.button} ${styles.sortButton}`}
-                onClick={toggleSortOrder}
-              >
+              <Button variant="tertiary" onClick={toggleSortOrder}>
                 昇順
-              </button>
-              <button
-                type="button"
-                className={`${styles.button} ${styles.sortButton}`}
-                onClick={toggleSortOrderDesc}
-              >
+              </Button>
+
+              <Button variant="tertiary" onClick={toggleSortOrderDesc}>
                 降順
-              </button>
+              </Button>
             </div>
           </div>
           <div>
@@ -236,17 +226,15 @@ export default function Home() {
                       </p>
                     </Link>
                   </div>
-                  {/* 今後、リストの表示方法は修正します。 */}
                   <div className={styles.btnContainer}>
                     <p className={styles.inputDate}>{todo.dueDate}</p>
 
-                    <button
-                      type="button"
-                      className={`${styles.button} ${styles.deleteButton} ${styles.listitem}`}
+                    <Button
+                      variant="secondary"
                       onClick={() => confirmDelete(todo.id)}
                     >
                       削除
-                    </button>
+                    </Button>
                   </div>
                 </li>
               ))}

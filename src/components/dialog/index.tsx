@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
-import dialogStyles from "../styles/dialog.module.css";
-import { useDialog } from "../contexts/DialogContext";
+import { useDialog } from "../../contexts/DialogContext";
+import dialogStyles from "./style.module.css";
+import { Button } from "../button";
 
 export const Dialog: React.FC = () => {
   const { isDialogOpen, title, yesButtonText, closeDialog, confirmAction } =
@@ -28,20 +29,13 @@ export const Dialog: React.FC = () => {
     <dialog ref={dialogRef} className={dialogStyles.dialog}>
       <p>{title}</p>
       <div className={dialogStyles.dialogButtons}>
-        <button
-          type="button"
-          className={dialogStyles.cancelButton}
-          onClick={closeDialog}
-        >
+        <Button variant="tertiary" onClick={closeDialog}>
           キャンセル
-        </button>
-        <button
-          type="button"
-          className={dialogStyles.yesButton}
-          onClick={confirmAction}
-        >
+        </Button>
+
+        <Button variant="secondary" onClick={confirmAction}>
           {yesButtonText}
-        </button>
+        </Button>
       </div>
     </dialog>
   );
