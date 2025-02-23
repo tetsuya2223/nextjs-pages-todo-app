@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
-import dialogStyles from "../styles/dialog.module.css";
-import { Button } from "./button/Button";
+import dialogStyles from "../dialog/dialog.module.css";
+import { Button } from "../button/Button";
 
 type Props = {
   title: string;
