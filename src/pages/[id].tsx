@@ -4,7 +4,7 @@ import type { Todo } from "./index.tsx";
 import detailsStyles from "../styles/detail.module.css";
 import Link from "next/link";
 import { Toast } from "../components/Toast";
-
+import { Button } from "../components/button";
 import { Dialog } from "../components/dialog";
 
 // データ保存はボタンを1つだけ設置し、まとめて管理。
@@ -126,16 +126,23 @@ const TodoDetails = () => {
     setTodo({ isLoading: false, data: findTodo });
   }, [id, router.isReady]);
 
-  const showToast = (type: "success" | "error") => {
-    setToast((prev) => ({
-      ...prev,
-      isOpen: true,
-      type,
-      message: type === "success" ? "成功しました" : "失敗しました。",
-    }));
-    setTimeout(() => {
-      setToast((prev) => ({ ...prev, isOpen: false }));
-    }, 3000);
+  const saveTodo = () => {
+    const savedTodos = localStorage.getItem("todoArray");
+
+    if (!savedTodos) return;
+    const parsedTodos = JSON.parse(savedTodos) as Todo[];
+
+    if (!todo.data) return;
+
+    const newTodoArray = parsedTodos.map((item) => {
+      if (item.id === todo.data?.id) {
+        return todo.data;
+      }
+
+      return item;
+    });
+
+    localStorage.setItem("todoArray", JSON.stringify(newTodoArray));
   };
 
   // 1. データ通信中の場合
@@ -232,52 +239,15 @@ const TodoDetails = () => {
           </div>
         </div>
 
-        <Link
-          href="/"
-          className={`${detailsStyles.button} ${detailsStyles.returnButton}`}
-        >
+        <Link href="/" className={detailsStyles.returnLink}>
           ホームに戻る
         </Link>
 
-        <button
-          type="button"
-          className={`${detailsStyles.button} ${detailsStyles.deleteButton}`}
-        >
-          タスクを削除する
-        </button>
+        <Button variant="secondary">タスクを削除する</Button>
 
-        <button //保存ボタンを押すまではデータベース（ここではlocalstorage）へデータは保存しない。
-          type="button"
-          className={`${detailsStyles.button} ${detailsStyles.editButton}`}
-          onClick={() => {
-            const savedTodos = localStorage.getItem("todoArray");
-
-            if (!savedTodos) {
-              showToast("error");
-              return;
-            }
-            const parsedTodos = JSON.parse(savedTodos) as Todo[];
-
-            if (!todo.data) {
-              showToast("error");
-              return;
-            }
-
-            const newTodoArray = parsedTodos.map((item) => {
-              if (item.id === todo.data?.id) {
-                return todo.data;
-              }
-
-              return item;
-            });
-
-            localStorage.setItem("todoArray", JSON.stringify(newTodoArray));
-
-            showToast("success");
-          }}
-        >
+        <Button variant="primary" onClick={saveTodo}>
           変更内容を保存する
-        </button>
+        </Button>
       </div>
 
       {/* toastコンポーネントに渡すpropsを追加*/}
