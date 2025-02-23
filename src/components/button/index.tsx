@@ -1,5 +1,5 @@
 import { ComponentProps } from "react";
-import buttonStyles from "./button.module.css";
+import buttonStyles from "./style.module.css";
 
 type ButtonProps = {
   /** @default "tertiary" */

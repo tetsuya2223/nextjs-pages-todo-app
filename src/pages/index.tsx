@@ -2,8 +2,8 @@ import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import { formatInTimeZone } from "date-fns-tz";
 import Link from "next/link";
-import { Dialog } from "../components/dialog/Dialog";
-import { Button } from "../components/button/Button";
+import { Dialog } from "../components/dialog";
+import { Button } from "../components/button";
 
 export type Todo = {
   id: string;
