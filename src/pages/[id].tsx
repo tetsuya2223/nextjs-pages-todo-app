@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { ChangeEvent, DispatchWithoutAction, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import type { Todo } from "./index.tsx";
 import detailsStyles from "../styles/detail.module.css";
 import Link from "next/link";
