@@ -2,9 +2,8 @@ import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import { formatInTimeZone } from "date-fns-tz";
 import Link from "next/link";
-import { useDialog } from "../contexts/DialogContext";
-import { Dialog } from "../components/dialog";
 import { Button } from "../components/button";
+import { useDialogContext } from "@/components/dialog/provider";
 
 export type Todo = {
   id: string;
@@ -22,7 +21,7 @@ export default function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [filter, setFilter] = useState<Filter>("all"); // フィルターの状態を保持
 
-  const { openDialog, closeDialog } = useDialog();
+  const { openDialog, closeDialog } = useDialogContext();
 
   useEffect(() => {
     const saveTodos = localStorage.getItem("todoArray");
@@ -104,22 +103,23 @@ export default function Home() {
     e.preventDefault();
   };
 
-  const confirmDelete = (id: string) => {
-    openDialog(
-      "タスクを削除しますか？",
-      "削除する",
-      () => () => deleteTodos(id)
-    );
-  };
-
   const deleteTodos = (id: string) => {
     if (!id) return;
     const newTodos = todos.filter((todo) => todo.id !== id);
 
     localStorage.setItem("todoArray", JSON.stringify(newTodos));
     setTodos(applyFilter(filter, newTodos));
+  };
 
-    closeDialog();
+  const confirmDelete = (id: string) => {
+    openDialog({
+      title: "タスクを削除しますか？",
+      yesButtonText: "削除する",
+      onConfirm: () => {
+        deleteTodos(id);
+        closeDialog();
+      },
+    });
   };
 
   const handleOptionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -178,7 +178,7 @@ export default function Home() {
             />
             <p>締め切り日：</p>
             <input type="date" value={dueDate} onChange={assignDueDate} />
-            <Button variant="primary" onClick={addTodos}>
+            <Button type="submit" variant="primary" onClick={addTodos}>
               登録
             </Button>
           </div>
@@ -242,8 +242,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {/* 削除確認モーダル */}
-      <Dialog />
     </>
   );
 }

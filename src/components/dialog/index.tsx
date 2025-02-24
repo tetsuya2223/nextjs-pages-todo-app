@@ -1,11 +1,11 @@
 import { useRef, useEffect } from "react";
-import { useDialog } from "../../contexts/DialogContext";
+import { useDialogContext } from "@/components/dialog/provider";
 import dialogStyles from "./style.module.css";
 import { Button } from "../button";
 
 export const Dialog: React.FC = () => {
-  const { isDialogOpen, title, yesButtonText, closeDialog, confirmAction } =
-    useDialog();
+  const { isDialogOpen, title, yesButtonText, closeDialog, onConfirmAction } =
+    useDialogContext();
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export const Dialog: React.FC = () => {
           キャンセル
         </Button>
 
-        <Button variant="secondary" onClick={confirmAction}>
+        <Button variant="secondary" onClick={onConfirmAction}>
           {yesButtonText}
         </Button>
       </div>

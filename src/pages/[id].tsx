@@ -5,7 +5,6 @@ import detailsStyles from "../styles/detail.module.css";
 import Link from "next/link";
 import { Toast } from "../components/Toast";
 import { Button } from "../components/button";
-import { Dialog } from "../components/dialog";
 
 // データ保存はボタンを1つだけ設置し、まとめて管理。
 type TodoData = {
@@ -252,8 +251,6 @@ const TodoDetails = () => {
 
       {/* toastコンポーネントに渡すpropsを追加*/}
       <Toast isOpen={toast.isOpen} message={toast.message} />
-      {/* ここにDialogコンポーネントを持ってくる */}
-      <Dialog />
     </>
   );
 };
