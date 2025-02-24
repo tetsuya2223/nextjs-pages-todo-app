@@ -11,6 +11,7 @@
   font-size: 1.1rem;
   line-height: 1.5;
   color: #333;
+  text-align: center;
 }
 
 .dialogButtons {
@@ -27,24 +28,4 @@
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s ease;
-}
-
-.cancelButton {
-  background-color: #f3f4f6;
-  color: #4b5563;
-}
-
-.cancelButton:hover,
-.cancelButton:focus {
-  background-color: #e5e7eb;
-}
-
-.deleteButton {
-  background-color: #ef4444;
-  color: white;
-}
-
-.deleteButton:hover,
-.deleteButton:focus {
-  background-color: #dc2626;
 }
