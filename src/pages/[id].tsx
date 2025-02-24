@@ -1,10 +1,11 @@
 import { useRouter } from "next/router";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, DispatchWithoutAction, useEffect, useState } from "react";
 import type { Todo } from "./index.tsx";
 import detailsStyles from "../styles/detail.module.css";
 import Link from "next/link";
-import { Toast } from "../components/Toast";
+// import { Toast } from "../components/Toast";
 import { Button } from "../components/button";
+import { useDialogContext } from "@/components/dialog/provider";
 
 // データ保存はボタンを1つだけ設置し、まとめて管理。
 type TodoData = {
@@ -17,17 +18,19 @@ const defaultValue = {
   data: null,
 };
 
-const TodoDetails = () => {
+export const TodoDetails = () => {
   const router = useRouter();
   const { id } = router.query;
 
   const [todo, setTodo] = useState<TodoData>(defaultValue);
 
-  const [toast, setToast] = useState({
-    isOpen: false,
-    message: "",
-    type: "success" as "success" | "error",
-  });
+  // const [toast, setToast] = useState({
+  //   isOpen: false,
+  //   message: "",
+  //   type: "success" as "success" | "error",
+  // });
+
+  const { openDialog, closeDialog } = useDialogContext();
 
   // textを変更するための関数
   const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
@@ -95,6 +98,31 @@ const TodoDetails = () => {
           isCompleted: !prev.data.isCompleted,
         },
       };
+    });
+  };
+
+  const deleteTodo = () => {
+    const savedTodos = localStorage.getItem("todoArray");
+    if (!savedTodos) return;
+
+    const parsedTodos = JSON.parse(savedTodos);
+
+    const newTodos = parsedTodos.filter((item: Todo) => item.id !== id);
+
+    localStorage.setItem("todoArray", JSON.stringify(newTodos));
+
+    // TODO:トーストを表示
+    router.push("/");
+  };
+
+  const confirmDelete = () => {
+    openDialog({
+      title: "タスクを削除しますか？",
+      yesButtonText: "削除する",
+      onConfirm: () => {
+        deleteTodo();
+        closeDialog();
+      },
     });
   };
 
@@ -242,15 +270,17 @@ const TodoDetails = () => {
           ホームに戻る
         </Link>
 
-        <Button variant="secondary">タスクを削除する</Button>
+        <Button variant="secondary" onClick={confirmDelete}>
+          タスクを削除する
+        </Button>
 
         <Button variant="primary" onClick={saveTodo}>
           変更内容を保存する
         </Button>
       </div>
 
-      {/* toastコンポーネントに渡すpropsを追加*/}
-      <Toast isOpen={toast.isOpen} message={toast.message} />
+      {/* TODO:トーストの修正
+      <Toast isOpen={toast.isOpen} message={toast.message} /> */}
     </>
   );
 };
