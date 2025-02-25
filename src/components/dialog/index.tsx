@@ -1,29 +1,18 @@
 import { useRef, useEffect } from "react";
+import { useDialogContext } from "@/components/dialog/provider";
 import dialogStyles from "./style.module.css";
 import { Button } from "../button";
 
-type Props = {
-  title: string;
-  yesButtonText: string;
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-};
-
-export const Dialog: React.FC<Props> = ({
-  title,
-  yesButtonText,
-  isOpen,
-  onClose,
-  onConfirm,
-}) => {
+export const Dialog: React.FC = () => {
+  const { isDialogOpen, title, yesButtonText, closeDialog, onConfirmAction } =
+    useDialogContext();
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     const dialogElement = dialogRef.current;
     if (!dialogElement) return;
 
-    if (isOpen) {
+    if (isDialogOpen) {
       if (!dialogElement.hasAttribute("open")) {
         dialogElement.showModal();
       }
@@ -32,17 +21,19 @@ export const Dialog: React.FC<Props> = ({
         dialogElement.close();
       }
     }
-  }, [isOpen]);
+  }, [isDialogOpen]);
+
+  if (!isDialogOpen) return null;
 
   return (
     <dialog ref={dialogRef} className={dialogStyles.dialog}>
       <p>{title}</p>
       <div className={dialogStyles.dialogButtons}>
-        <Button variant="tertiary" onClick={onClose}>
+        <Button variant="tertiary" onClick={closeDialog}>
           キャンセル
         </Button>
 
-        <Button variant="secondary" onClick={onConfirm}>
+        <Button variant="secondary" onClick={onConfirmAction}>
           {yesButtonText}
         </Button>
       </div>

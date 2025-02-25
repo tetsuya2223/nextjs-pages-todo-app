@@ -4,6 +4,7 @@ import type { Todo } from "./index.tsx";
 import detailsStyles from "../styles/detail.module.css";
 import Link from "next/link";
 import { Button } from "../components/button";
+import { useDialogContext } from "@/components/dialog/provider";
 
 // データ保存はボタンを1つだけ設置し、まとめて管理。
 type TodoData = {
@@ -16,11 +17,13 @@ const defaultValue = {
   data: null,
 };
 
-const TodoDetails = () => {
+export const TodoDetails = () => {
   const router = useRouter();
   const { id } = router.query;
 
   const [todo, setTodo] = useState<TodoData>(defaultValue);
+
+  const { openDialog, closeDialog } = useDialogContext();
 
   // textを変更するための関数
   const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
@@ -91,6 +94,31 @@ const TodoDetails = () => {
     });
   };
 
+  const deleteTodo = () => {
+    const savedTodos = localStorage.getItem("todoArray");
+    if (!savedTodos) return;
+
+    const parsedTodos = JSON.parse(savedTodos);
+
+    const newTodos = parsedTodos.filter((item: Todo) => item.id !== id);
+
+    localStorage.setItem("todoArray", JSON.stringify(newTodos));
+
+    // TODO:トーストを表示
+    router.replace("/");
+  };
+
+  const confirmDelete = () => {
+    openDialog({
+      title: "タスクを削除しますか？",
+      yesButtonText: "削除する",
+      onConfirm: () => {
+        deleteTodo();
+        closeDialog();
+      },
+    });
+  };
+
   useEffect(() => {
     if (!router.isReady) return;
 
@@ -147,7 +175,10 @@ const TodoDetails = () => {
     return (
       <div className={detailsStyles.detailContainer}>
         <p>タスクが存在しません</p>
-        <Link href="/" className={detailsStyles.returnLink}>
+        <Link
+          href="/"
+          className={`${detailsStyles.button} ${detailsStyles.returnButton}`}
+        >
           ホームに戻る
         </Link>
       </div>
@@ -212,9 +243,11 @@ const TodoDetails = () => {
           <div className={detailsStyles.textContainer}>
             <span className={detailsStyles.itemHeading}>状態:</span>
             <input
+              // 完了/未完了の状態切替にチェックボックスを使用
               type="checkbox"
               id="isCompleted"
               className={detailsStyles.checkbox}
+              // isCompleted が true ならチェックが入る
               checked={todo.data.isCompleted}
               onChange={handleCompleted}
             />
@@ -228,8 +261,10 @@ const TodoDetails = () => {
       <Link href="/" className={detailsStyles.returnLink}>
         ホームに戻る
       </Link>
-      {/* onClickは後ほど記述 */}
-      <Button variant="secondary">タスクを削除する</Button>
+
+      <Button variant="secondary" onClick={confirmDelete}>
+        タスクを削除する
+      </Button>
 
       <Button variant="primary" onClick={saveTodo}>
         変更内容を保存する
