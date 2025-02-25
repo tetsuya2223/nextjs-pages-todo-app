@@ -2,8 +2,8 @@ import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import { formatInTimeZone } from "date-fns-tz";
 import Link from "next/link";
-import { Dialog } from "../components/dialog";
 import { Button } from "../components/button";
+import { useDialogContext } from "@/components/dialog/provider";
 
 export type Todo = {
   id: string;
@@ -20,8 +20,8 @@ export default function Home() {
   const [dueDate, setDueDate] = useState("");
   const [todos, setTodos] = useState<Todo[]>([]);
   const [filter, setFilter] = useState<Filter>("all"); // フィルターの状態を保持
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+
+  const { openDialog, closeDialog } = useDialogContext();
 
   useEffect(() => {
     const saveTodos = localStorage.getItem("todoArray");
@@ -103,24 +103,23 @@ export default function Home() {
     e.preventDefault();
   };
 
-  const confirmDelete = (id: string) => {
-    setDeleteTarget(id);
-    setIsDialogOpen(true);
-  };
+  const deleteTodos = (id: string) => {
+    if (!id) return;
+    const newTodos = todos.filter((todo) => todo.id !== id);
 
-  const deleteTodos = () => {
-    if (!deleteTarget) return; // 削除対象がない場合は何もしない
-
-    // 削除対象のIDを除外
-    const newTodos = todos.filter((todo) => todo.id !== deleteTarget);
-
-    // 更新後のデータを適用
     localStorage.setItem("todoArray", JSON.stringify(newTodos));
     setTodos(applyFilter(filter, newTodos));
+  };
 
-    // モーダルを閉じる & 削除対象をリセット
-    setIsDialogOpen(false);
-    setDeleteTarget(null);
+  const confirmDelete = (id: string) => {
+    openDialog({
+      title: "タスクを削除しますか？",
+      yesButtonText: "削除する",
+      onConfirm: () => {
+        deleteTodos(id);
+        closeDialog();
+      },
+    });
   };
 
   const handleOptionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -163,93 +162,85 @@ export default function Home() {
   };
 
   return (
-    <>
+    <div className={styles.todoContainer}>
       <h1 className={styles.title}>TODOリスト</h1>
-      <div className={styles.todoContainer}>
-        <form className={styles.inputArea} onSubmit={handleSubmit}>
-          <div className={styles.taskForm}>
-            <label htmlFor="task-input">タスク:</label>
-            <input
-              className={styles.input}
-              type="text"
-              placeholder={"タスクを入力"}
-              value={text}
-              onChange={changeText}
-              id="task-input"
-            />
-            <p>締め切り日：</p>
-            <input type="date" value={dueDate} onChange={assignDueDate} />
-            <Button variant="primary" onClick={addTodos}>
-              登録
+
+      <form className={styles.inputArea} onSubmit={handleSubmit}>
+        <div className={styles.taskForm}>
+          <label htmlFor="task-input">タスク:</label>
+          <input
+            className={styles.input}
+            type="text"
+            placeholder={"タスクを入力"}
+            value={text}
+            onChange={changeText}
+            id="task-input"
+          />
+          <p>締め切り日：</p>
+          <input type="date" value={dueDate} onChange={assignDueDate} />
+          <Button type="submit" variant="primary" onClick={addTodos}>
+            登録
+          </Button>
+        </div>
+      </form>
+
+      <div className={styles.ListContainer}>
+        <div className={styles.sortContainer}>
+          <select
+            className={styles.sortBox}
+            defaultValue="all"
+            onChange={handleOptionChange}
+          >
+            <option value="all">すべてのタスク</option>
+            <option value="completed">完了したタスク</option>
+            <option value="unCompleted">完了していないタスク</option>
+          </select>
+          <div className={styles.sortOder}>
+            <Button variant="tertiary" onClick={toggleSortOrder}>
+              昇順
+            </Button>
+
+            <Button variant="tertiary" onClick={toggleSortOrderDesc}>
+              降順
             </Button>
           </div>
-        </form>
-
-        <div className={styles.ListContainer}>
-          <div className={styles.sortContainer}>
-            <select
-              className={styles.sortBox}
-              defaultValue="all"
-              onChange={handleOptionChange}
-            >
-              <option value="all">すべてのタスク</option>
-              <option value="completed">完了したタスク</option>
-              <option value="unCompleted">完了していないタスク</option>
-            </select>
-            <div className={styles.sortOder}>
-              <Button variant="tertiary" onClick={toggleSortOrder}>
-                昇順
-              </Button>
-
-              <Button variant="tertiary" onClick={toggleSortOrderDesc}>
-                降順
-              </Button>
-            </div>
-          </div>
-          <div>
-            <ul className={styles.taskList}>
-              {todos.map((todo) => (
-                <li className={styles.listItems} key={todo.id}>
-                  <div className={styles.textContainer}>
-                    <input
-                      type="checkbox"
-                      className={styles.checkbox}
-                      onChange={() => toggleCompleted(todo.id)}
-                      checked={todo.isCompleted}
-                    />
-                    <Link href={`/${todo.id}`}>
-                      <p
-                        className={`${styles.listItemText} ${styles.listitem} ${
-                          todo.isCompleted ? styles.listItemTextComped : ""
-                        }`}
-                      >
-                        {todo.text}
-                      </p>
-                    </Link>
-                  </div>
-                  <div className={styles.btnContainer}>
-                    <p className={styles.inputDate}>{todo.dueDate}</p>
-
-                    <Button
-                      variant="secondary"
-                      onClick={() => confirmDelete(todo.id)}
+        </div>
+        <div>
+          <ul className={styles.taskList}>
+            {todos.map((todo) => (
+              <li className={styles.listItems} key={todo.id}>
+                <div className={styles.textContainer}>
+                  <input
+                    type="checkbox"
+                    className={styles.checkbox}
+                    onChange={() => toggleCompleted(todo.id)}
+                    checked={todo.isCompleted}
+                  />
+                  <Link href={`/${todo.id}`}>
+                    <p
+                      className={`${styles.listItemText} ${styles.listitem} ${
+                        todo.isCompleted ? styles.listItemTextComped : ""
+                      }`}
                     >
-                      削除
-                    </Button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+                      {todo.text}
+                    </p>
+                  </Link>
+                </div>
+                <div className={styles.btnContainer}>
+                  <p className={styles.inputDate}>{todo.dueDate}</p>
+
+                  <Button
+                    variant="secondary"
+                    onClick={() => confirmDelete(todo.id)}
+                  >
+                    削除
+                  </Button>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
-      <Dialog
-        title="タスクを削除しますか？"
-        yesButtonText="削除する"
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        onConfirm={deleteTodos}
-      />
-    </>
+    </div>
   );
 }
