@@ -3,7 +3,6 @@ import { ChangeEvent, useEffect, useState } from "react";
 import type { Todo } from "./index.tsx";
 import detailsStyles from "../styles/detail.module.css";
 import Link from "next/link";
-// import { Toast } from "../components/Toast";
 import { Button } from "../components/button";
 import { useDialogContext } from "@/components/dialog/provider";
 
