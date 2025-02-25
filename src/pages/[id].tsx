@@ -24,12 +24,6 @@ export const TodoDetails = () => {
 
   const [todo, setTodo] = useState<TodoData>(defaultValue);
 
-  // const [toast, setToast] = useState({
-  //   isOpen: false,
-  //   message: "",
-  //   type: "success" as "success" | "error",
-  // });
-
   const { openDialog, closeDialog } = useDialogContext();
 
   // textを変更するための関数
@@ -194,94 +188,89 @@ export const TodoDetails = () => {
 
   // 3. データ通信が完了し、データが存在していた場合（data が null でない場合）
   return (
-    <>
-      <div className={detailsStyles.detailContainer}>
-        <h1 className={detailsStyles.detailHeader}>TODOタスク詳細</h1>
+    <div className={detailsStyles.detailContainer}>
+      <h1 className={detailsStyles.detailHeader}>TODOタスク詳細</h1>
 
-        <div className={detailsStyles.detailList}>
-          <div className={detailsStyles.detailListItem}>
-            <div className={detailsStyles.textContainer}>
-              <label htmlFor="taskInput" className={detailsStyles.itemHeading}>
-                タスク:
-              </label>
-              <input
-                type="text"
-                id="taskInput"
-                placeholder="タスクを入力"
-                style={{ border: "1px solid gray" }}
-                value={todo.data.text}
-                onChange={handleChangeText}
-              />
-            </div>
-          </div>
-
-          <div className={detailsStyles.detailListItem}>
-            <div className={detailsStyles.detailTextContainer}>
-              <label htmlFor="detailText" className={detailsStyles.itemHeading}>
-                タスク詳細:
-              </label>
-              <textarea
-                className={detailsStyles.detailTextarea}
-                name=""
-                id="detailText"
-                rows={5}
-                placeholder="詳細を入力してください"
-                maxLength={500}
-                value={todo.data.detail}
-                onChange={handleChangeDetailText}
-              />
-            </div>
-          </div>
-
-          <div className={detailsStyles.detailListItem}>
-            <div className={detailsStyles.textContainer}>
-              <label htmlFor="dueDate" className={detailsStyles.itemHeading}>
-                締め切り日:
-              </label>
-              <input
-                type="date"
-                id="dueDate"
-                value={todo.data.dueDate}
-                onChange={handleAssignDate}
-              />
-            </div>
-          </div>
-
-          <div className={detailsStyles.detailListItem}>
-            <div className={detailsStyles.textContainer}>
-              <span className={detailsStyles.itemHeading}>状態:</span>
-              <input
-                // 完了/未完了の状態切替にチェックボックスを使用
-                type="checkbox"
-                id="isCompleted"
-                className={detailsStyles.checkbox}
-                // isCompleted が true ならチェックが入る
-                checked={todo.data.isCompleted}
-                onChange={handleCompleted}
-              />
-              <label htmlFor="isCompleted">
-                {todo.data.isCompleted ? "完了" : "未完了"}
-              </label>
-            </div>
+      <div className={detailsStyles.detailList}>
+        <div className={detailsStyles.detailListItem}>
+          <div className={detailsStyles.textContainer}>
+            <label htmlFor="taskInput" className={detailsStyles.itemHeading}>
+              タスク:
+            </label>
+            <input
+              type="text"
+              id="taskInput"
+              placeholder="タスクを入力"
+              style={{ border: "1px solid gray" }}
+              value={todo.data.text}
+              onChange={handleChangeText}
+            />
           </div>
         </div>
 
-        <Link href="/" className={detailsStyles.returnLink}>
-          ホームに戻る
-        </Link>
+        <div className={detailsStyles.detailListItem}>
+          <div className={detailsStyles.detailTextContainer}>
+            <label htmlFor="detailText" className={detailsStyles.itemHeading}>
+              タスク詳細:
+            </label>
+            <textarea
+              className={detailsStyles.detailTextarea}
+              name=""
+              id="detailText"
+              rows={5}
+              placeholder="詳細を入力してください"
+              maxLength={500}
+              value={todo.data.detail}
+              onChange={handleChangeDetailText}
+            />
+          </div>
+        </div>
 
-        <Button variant="secondary" onClick={confirmDelete}>
-          タスクを削除する
-        </Button>
+        <div className={detailsStyles.detailListItem}>
+          <div className={detailsStyles.textContainer}>
+            <label htmlFor="dueDate" className={detailsStyles.itemHeading}>
+              締め切り日:
+            </label>
+            <input
+              type="date"
+              id="dueDate"
+              value={todo.data.dueDate}
+              onChange={handleAssignDate}
+            />
+          </div>
+        </div>
 
-        <Button variant="primary" onClick={saveTodo}>
-          変更内容を保存する
-        </Button>
+        <div className={detailsStyles.detailListItem}>
+          <div className={detailsStyles.textContainer}>
+            <span className={detailsStyles.itemHeading}>状態:</span>
+            <input
+              // 完了/未完了の状態切替にチェックボックスを使用
+              type="checkbox"
+              id="isCompleted"
+              className={detailsStyles.checkbox}
+              // isCompleted が true ならチェックが入る
+              checked={todo.data.isCompleted}
+              onChange={handleCompleted}
+            />
+            <label htmlFor="isCompleted">
+              {todo.data.isCompleted ? "完了" : "未完了"}
+            </label>
+          </div>
+        </div>
       </div>
 
-      {/* TODO:トーストの修正
-      <Toast isOpen={toast.isOpen} message={toast.message} /> */}
-    </>
+      <Link href="/" className={detailsStyles.returnLink}>
+        ホームに戻る
+      </Link>
+
+      <Button variant="secondary" onClick={confirmDelete}>
+        タスクを削除する
+      </Button>
+
+      <Button variant="primary" onClick={saveTodo}>
+        変更内容を保存する
+      </Button>
+    </div>
   );
 };
 
