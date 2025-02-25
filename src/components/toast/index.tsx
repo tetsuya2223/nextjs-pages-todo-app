@@ -18,7 +18,7 @@ export const Toast: React.FC<Props> = ({ isOpen, type }) => {
 
       return () => clearTimeout(timer); // 不要なタイマーが残らないようにクリーンアップ。
     }
-  }, [isOpen]);
+  }, [visible]);
 
   if (!visible) return null;
 
