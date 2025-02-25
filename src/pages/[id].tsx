@@ -106,7 +106,7 @@ export const TodoDetails = () => {
     localStorage.setItem("todoArray", JSON.stringify(newTodos));
 
     // TODO:トーストを表示
-    router.push("/");
+    router.replace("/");
   };
 
   const confirmDelete = () => {
