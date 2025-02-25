@@ -1,4 +1,4 @@
-import toastStyles from "./styles.module.css";
+import toastStyles from "./style.module.css";
 
 type Props = {
   isOpen: boolean;
