@@ -1,4 +1,5 @@
 export type ToastContextType = {
-  isOpen: boolean;
-  type: "success" | "error";
+  isToastOpen: boolean;
+  toastType: "success" | "error";
+  showToast: (type: "success" | "error") => void;
 };

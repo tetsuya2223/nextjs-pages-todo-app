@@ -9,10 +9,10 @@
   border-radius: 4px;
 }
 
-.toastSuccess {
+.success {
   background-color: #22c55e;
 }
 
-.toastError {
+.error {
   background-color: #ef4444;
 }
