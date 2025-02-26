@@ -1,4 +1,4 @@
-import { useState, useContext, PropsWithChildren } from "react";
+import { useState, useContext, useEffect, PropsWithChildren } from "react";
 
 import { ToastContext } from "./context";
 
@@ -11,11 +11,17 @@ export const ToastProvider = (props: PropsWithChildren) => {
   const showToast = (type: "success" | "error") => {
     setToastType(type);
     setToastOpen(true);
+  };
 
-    setTimeout(() => {
+  useEffect(() => {
+    if (!isToastOpen) return;
+
+    const timer = setTimeout(() => {
       setToastOpen(false);
     }, 3000);
-  };
+
+    return () => clearTimeout(timer);
+  }, [isToastOpen]);
 
   return (
     <ToastContext.Provider
