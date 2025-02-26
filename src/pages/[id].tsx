@@ -195,9 +195,18 @@ export const TodoDetails = () => {
         throw "Abort route change";
       }
     };
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (isModified) {
+        event.preventDefault();
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
     router.events.on("routeChangeStart", handleRouteChange);
 
     return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+
       router.events.off("routeChangeStart", handleRouteChange);
     };
   }, [isModified, router]);
