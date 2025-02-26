@@ -171,7 +171,7 @@ export const TodoDetails = () => {
     });
 
     localStorage.setItem("todoArray", JSON.stringify(newTodoArray));
-    console.log(showToast);
+    showToast("success");
   };
 
   // 1. データ通信中の場合
