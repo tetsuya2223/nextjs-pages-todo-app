@@ -23,6 +23,7 @@ export const TodoDetails = () => {
   const { id } = router.query;
 
   const [todo, setTodo] = useState<TodoData>(defaultValue);
+  const [isModified, setIsModified] = useState(false);
 
   const { openDialog, closeDialog } = useDialogContext();
   const { showToast } = useToastContext();
@@ -61,6 +62,7 @@ export const TodoDetails = () => {
         },
       };
     });
+    setIsModified(true);
   };
 
   // 締め切り日を変更するための関数
@@ -79,6 +81,7 @@ export const TodoDetails = () => {
         },
       };
     });
+    setIsModified(true);
   };
 
   // 完了/未完了を切り変える関数
@@ -94,6 +97,7 @@ export const TodoDetails = () => {
         },
       };
     });
+    setIsModified(true);
   };
 
   const deleteTodo = () => {
@@ -171,8 +175,41 @@ export const TodoDetails = () => {
     });
 
     localStorage.setItem("todoArray", JSON.stringify(newTodoArray));
+
+    setIsModified(false);
     showToast("success");
   };
+
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      if (isModified) {
+        openDialog({
+          title: "変更が保存されていません。\n変更を破棄しますか？",
+          yesButtonText: "破棄する",
+          onConfirm: () => {
+            setIsModified(false);
+            closeDialog();
+            router.push(url);
+          },
+        });
+        throw "Abort route change";
+      }
+    };
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (isModified) {
+        event.preventDefault();
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    router.events.on("routeChangeStart", handleRouteChange);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+
+      router.events.off("routeChangeStart", handleRouteChange);
+    };
+  }, [isModified, router]);
 
   // 1. データ通信中の場合
   if (todo.isLoading) {
