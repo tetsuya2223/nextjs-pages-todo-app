@@ -8,7 +8,7 @@ export const Toast: React.FC = () => {
 
   return (
     <div className={toastStyles.toastContainer}>
-      <div className={`${toastStyles.toast} ${toastStyles[toastType]}`}>
+      <div className={`${toastStyles.toast} ${toastStyles[toastType]} `}>
         {toastType === "success" ? "成功しました！" : "エラーが発生しました"}
       </div>
     </div>

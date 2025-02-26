@@ -1,12 +1,14 @@
 .toast {
   position: fixed;
-  bottom: 20px;
+  bottom: 100px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(100px);
   padding: 16px;
   background-color: #333;
   color: #fff;
   border-radius: 4px;
+  opacity: 0;
+  animation: toastIn 0.5s ease-out forwards;
 }
 
 .success {
@@ -15,4 +17,15 @@
 
 .error {
   background-color: #ef4444;
+}
+
+@keyframes toastIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
