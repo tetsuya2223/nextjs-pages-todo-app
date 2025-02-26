@@ -5,6 +5,7 @@ import detailsStyles from "../styles/detail.module.css";
 import Link from "next/link";
 import { Button } from "../components/button";
 import { useDialogContext } from "@/components/dialog/provider";
+import { useToastContext } from "@/components/toast/provider";
 
 // データ保存はボタンを1つだけ設置し、まとめて管理。
 type TodoData = {
@@ -25,6 +26,7 @@ export const TodoDetails = () => {
   const [isModified, setIsModified] = useState(false);
 
   const { openDialog, closeDialog } = useDialogContext();
+  const { showToast } = useToastContext();
 
   // textを変更するための関数
   const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
@@ -153,10 +155,16 @@ export const TodoDetails = () => {
   const saveTodo = () => {
     const savedTodos = localStorage.getItem("todoArray");
 
-    if (!savedTodos) return;
+    if (!savedTodos) {
+      showToast("error");
+      return;
+    }
     const parsedTodos = JSON.parse(savedTodos) as Todo[];
 
-    if (!todo.data) return;
+    if (!todo.data) {
+      showToast("error");
+      return;
+    }
 
     const newTodoArray = parsedTodos.map((item) => {
       if (item.id === todo.data?.id) {
@@ -169,6 +177,7 @@ export const TodoDetails = () => {
     localStorage.setItem("todoArray", JSON.stringify(newTodoArray));
 
     setIsModified(false);
+    showToast("success");
   };
 
   useEffect(() => {
