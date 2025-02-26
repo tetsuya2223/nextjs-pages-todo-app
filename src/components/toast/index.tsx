@@ -1,16 +1,16 @@
+import { useToastContext } from "./provider";
 import toastStyles from "./style.module.css";
 
-type Props = {
-  isOpen: boolean;
-  message: string;
-};
+export const Toast: React.FC = () => {
+  const { isToastOpen, toastType } = useToastContext();
 
-export const Toast: React.FC<Props> = ({ isOpen, message }) => {
-  if (!isOpen) return null;
+  if (!isToastOpen) return null;
 
   return (
     <div className={toastStyles.toastContainer}>
-      <p>{message}</p>
+      <div className={`${toastStyles.toast} ${toastStyles[toastType]}`}>
+        {toastType === "success" ? "成功しました！" : "エラーが発生しました"}
+      </div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-.toastContainer {
+.toast {
   position: fixed;
   bottom: 20px;
   left: 50%;
@@ -7,5 +7,12 @@
   background-color: #333;
   color: #fff;
   border-radius: 4px;
-  transition: opacity 0.3s ease-in-out;
+}
+
+.success {
+  background-color: #22c55e;
+}
+
+.error {
+  background-color: #ef4444;
 }
