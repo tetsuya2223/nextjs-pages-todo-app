@@ -5,23 +5,17 @@ import { ToastContext } from "./context";
 export const ToastProvider = (props: PropsWithChildren) => {
   const { children } = props;
 
-  const [isToastOpen, setToastOpen] = useState(false);
+  const [isToastOpen, setIsToastOpen] = useState(false);
   const [toastType, setToastType] = useState<"success" | "error">("success");
 
   const showToast = (type: "success" | "error") => {
     setToastType(type);
-    setToastOpen(true);
+    setIsToastOpen(true);
   };
 
-  useEffect(() => {
-    if (!isToastOpen) return;
-
-    const timer = setTimeout(() => {
-      setToastOpen(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [isToastOpen]);
+  const closeToast = () => {
+    setIsToastOpen(false);
+  };
 
   return (
     <ToastContext.Provider
@@ -29,6 +23,7 @@ export const ToastProvider = (props: PropsWithChildren) => {
         isToastOpen,
         toastType,
         showToast,
+        closeToast,
       }}
     >
       {children}

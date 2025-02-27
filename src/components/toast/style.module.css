@@ -1,12 +1,14 @@
 .toast {
   position: fixed;
-  bottom: 20px;
+  bottom: 100px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(100px);
   padding: 16px;
   background-color: #333;
   color: #fff;
   border-radius: 4px;
+  opacity: 0;
+  transition: opacity 250ms ease-out, transform 250ms ease-out;
 }
 
 .success {
@@ -15,4 +17,13 @@
 
 .error {
   background-color: #ef4444;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0px);
+}
+.toast.hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(100px);
 }
