@@ -1,10 +1,13 @@
+import { useFade } from "@/hooks/use-fade";
 import { useToastContext } from "./provider";
 import toastStyles from "./style.module.css";
 
 export const Toast: React.FC = () => {
   const { isToastOpen, toastType } = useToastContext();
 
-  if (!isToastOpen) return null;
+  const { display } = useFade(isToastOpen);
+
+  if (!display) return null;
 
   return (
     <div className={toastStyles.toastContainer}>
