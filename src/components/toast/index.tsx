@@ -15,7 +15,7 @@ export const Toast: React.FC = () => {
     }, 3000);
 
     return () => clearTimeout(timerId);
-  }, [isToastOpen]);
+  }, [isToastOpen, closeToast]);
 
   if (!display) return null;
 
