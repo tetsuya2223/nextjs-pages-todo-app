@@ -9,8 +9,6 @@ export const Toast: React.FC = () => {
 
   if (!display) return null;
 
-  console.log("isToastOpen", isToastOpen);
-
   return (
     <div
       className={`${toastStyles.toast} ${toastStyles[toastType]} ${
