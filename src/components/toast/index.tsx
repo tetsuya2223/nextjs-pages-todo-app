@@ -9,12 +9,16 @@ export const Toast: React.FC = () => {
 
   if (!display) return null;
 
+  console.log("isToastOpen", isToastOpen);
+
   return (
-    <div className={toastStyles.toastContainer}>
-      <div className={`${toastStyles.toast} ${toastStyles[toastType]}`}>
-        {/** TODO: Toastの中身のテキストを関数経由で変更できるようにする */}
-        {toastType === "success" ? "成功しました！" : "エラーが発生しました"}
-      </div>
+    <div
+      className={`${toastStyles.toast} ${toastStyles[toastType]} ${
+        isToastOpen ? toastStyles.show : toastStyles.close
+      }`}
+    >
+      {/** TODO: Toastの中身のテキストを関数経由で変更できるようにする */}
+      {toastType === "success" ? "成功しました！" : "エラーが発生しました"}
     </div>
   );
 };
