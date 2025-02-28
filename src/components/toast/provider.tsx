@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, PropsWithChildren } from "react";
+import { useState, useContext, PropsWithChildren } from "react";
 
 import { ToastContext } from "./context";
 
