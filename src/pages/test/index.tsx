@@ -1,19 +1,12 @@
-export default function TestPage() {
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 16,
-        padding: 16,
-      }}
-    >
-      <h1 style={{ fontSize: 20, fontWeight: "bold" }}>
-        Toastの動作確認テスト画面
-      </h1>
+import { Toast } from "@/components/toast";
+import { useToastContext } from "@/components/toast/provider";
+import { Fragment } from "react";
 
+export default function TestPage() {
+  const { showToast } = useToastContext();
+
+  return (
+    <Fragment>
       <div
         style={{
           display: "flex",
@@ -21,31 +14,54 @@ export default function TestPage() {
           justifyContent: "center",
           alignItems: "center",
           gap: 16,
+          padding: 16,
         }}
       >
-        <button
-          type="button"
+        <h1 style={{ fontSize: 20, fontWeight: "bold" }}>
+          Toastの動作確認テスト画面
+        </h1>
+
+        <div
           style={{
-            color: "white",
-            background: "#00801A",
-            padding: 16,
-            borderRadius: 1000,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 16,
           }}
         >
-          成功トーストを表示するボタン
-        </button>
-        <button
-          type="button"
-          style={{
-            color: "white",
-            background: "#DA3B36",
-            padding: 16,
-            borderRadius: 1000,
-          }}
-        >
-          失敗トーストを表示するボタン
-        </button>
+          <button
+            type="button"
+            style={{
+              color: "white",
+              background: "#00801A",
+              padding: 16,
+              borderRadius: 1000,
+            }}
+            onClick={() => {
+              showToast("success");
+            }}
+          >
+            成功トーストを表示するボタン
+          </button>
+          <button
+            type="button"
+            style={{
+              color: "white",
+              background: "#DA3B36",
+              padding: 16,
+              borderRadius: 1000,
+            }}
+            onClick={() => {
+              showToast("error");
+            }}
+          >
+            失敗トーストを表示するボタン
+          </button>
+        </div>
       </div>
-    </div>
+
+      <Toast />
+    </Fragment>
   );
 }
