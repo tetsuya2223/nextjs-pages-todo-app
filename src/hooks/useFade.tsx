@@ -1,24 +1,22 @@
 import { useEffect, useState } from "react";
 
-export const useFade = (isOpen: boolean, fadeDuration: number = 250) => {
-  const [display, setDisplay] = useState(isOpen);
-  const [isFadingOut, setIsFadingOut] = useState(false);
+export const useFade = (isVisible: boolean, fadeDuration: number = 250) => {
+  const [display, setDisplay] = useState(isVisible);
 
   useEffect(() => {
-    if (isOpen) {
-      setDisplay(true);
-      setIsFadingOut(false);
-    } else {
-      if (display) {
-        setIsFadingOut(true);
-
-        const timerId = setTimeout(() => {
-          setDisplay(false);
-        }, fadeDuration);
-        return () => clearTimeout(timerId);
-      }
+    /** 表示時の処理 */
+    if (isVisible) {
+      setDisplay(isVisible);
+      console.log("isVisibleがtrue:", isVisible);
+      return;
     }
-  }, [isOpen, fadeDuration]);
 
-  return { display, isFadingOut };
+    /** 非表示時の処理、アニメーション実行後dom破棄 */
+    const time = fadeDuration ?? 250;
+    const timer = window.setTimeout(() => setDisplay(isVisible), time);
+    console.log("isVisibleがfalse:", isVisible);
+    return () => clearTimeout(timer);
+  }, [isVisible]);
+
+  return { display };
 };
