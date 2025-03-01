@@ -102,7 +102,10 @@ export const TodoDetails = () => {
 
   const deleteTodo = () => {
     const savedTodos = localStorage.getItem("todoArray");
-    if (!savedTodos) return;
+    if (!savedTodos) {
+      showToast("error");
+      return;
+    }
 
     const parsedTodos = JSON.parse(savedTodos);
 
@@ -110,7 +113,8 @@ export const TodoDetails = () => {
 
     localStorage.setItem("todoArray", JSON.stringify(newTodos));
 
-    // TODO:トーストを表示
+    showToast("success");
+
     router.replace("/");
   };
 

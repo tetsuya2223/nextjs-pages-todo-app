@@ -4,6 +4,7 @@ import { formatInTimeZone } from "date-fns-tz";
 import Link from "next/link";
 import { Button } from "../components/button";
 import { useDialogContext } from "@/components/dialog/provider";
+import { useToastContext } from "@/components/toast/provider";
 
 export type Todo = {
   id: string;
@@ -20,6 +21,7 @@ export default function Home() {
   const [dueDate, setDueDate] = useState("");
   const [todos, setTodos] = useState<Todo[]>([]);
   const [filter, setFilter] = useState<Filter>("all"); // フィルターの状態を保持
+  const { showToast } = useToastContext();
 
   const { openDialog, closeDialog } = useDialogContext();
 
@@ -104,11 +106,16 @@ export default function Home() {
   };
 
   const deleteTodos = (id: string) => {
-    if (!id) return;
+    if (!id) {
+      showToast("error");
+      return;
+    }
+
     const newTodos = todos.filter((todo) => todo.id !== id);
 
     localStorage.setItem("todoArray", JSON.stringify(newTodos));
     setTodos(applyFilter(filter, newTodos));
+    showToast("success");
   };
 
   const confirmDelete = (id: string) => {
