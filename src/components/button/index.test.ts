@@ -1,36 +1,29 @@
-import { Button } from "./index";
+// import { Button } from "./index";
 
-//buttonコンポーネントがレンダリングされる
-describe("button", () => {
-  test.todo("ボタンがレンダリングされていること");
+describe("Buttonコンポーネント", () => {
+  test.todo("Buttonコンポーネントがレンダリングされていること");
 });
 
-//childrenが表示されること
-describe("button", () => {
-  test.todo("登録と表示されること");
+describe("Buttonメッセージ", () => {
+  describe("childrenが「何もない」場合", () => {
+    test.todo("ボタンが表示されるないこと");
+  });
+  describe("childrenが「登録」の場合", () => {
+    test.todo("登録と表示されること");
+  });
 });
 
-//variantが反映されること
 describe("button", () => {
-  test.todo("variant=primaryであること");
-  test.todo("variant=secondaryであること");
-  test.todo("variant=tertiaryであること");
-  //何も指定しなければ
-  test.todo("variant=tertiaryであること");
-});
-
-//typeが反映されること
-describe("button", () => {
-  test.todo("type=submitであること");
-  //何も指定しなければ
-  test.todo("type=buttonであること");
-});
-
-//variantとtypeが反映されること
-describe("button", () => {
-  test.todo("variant=primary, type=submitであること");
-  test.todo("variant=secondary, type=submitであること");
-  test.todo("variant=tertiary, type=submitであること");
-  //何も指定しなければ
-  test.todo("variant=tertiary, type=buttonであること");
+  describe("variant=primary, type=submitである場合", () => {
+    test.todo("classNameがprimary、属性がsubmitであること");
+  });
+  describe("variant=secondary, type=submitである場合", () => {
+    test.todo("classNameがsecondary、属性がsubmitであること");
+  });
+  describe("variant=tertiary, type=submitである場合", () => {
+    test.todo("classNameがtertiary、属性がsubmitであること");
+  });
+  describe("何も指定しない場合", () => {
+    test.todo("classNameがtertiary、属性がbuttonであること");
+  });
 });
