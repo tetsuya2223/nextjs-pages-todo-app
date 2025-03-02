@@ -11,15 +11,14 @@ jobs:
       - name: Checkout Pushed Code on branch
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3.8.2
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
         with:
-          node-version-file: "package.json"
-          cache: "npm"
+          node-version: "20"
 
       - name: Check if node_modules cache（after setup-node)
         id: modules-cache
-        uses: actions/cache@f4b3439a656ba812b8cb417d2d49f9c810103092 # v3.4.0
+        uses: actions/cache@v4
         with:
           path: ./node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('package-lock.json') }}
