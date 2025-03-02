@@ -1,0 +1,36 @@
+name: Node.js Continuous Integration
+
+on:
+  push:
+
+jobs:
+  node-test:
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: Checkout Pushed Code on branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3.8.2
+        with:
+          node-version-file: "package.json"
+          cache: "npm"
+
+      - name: Check if node_modules cache（after setup-node)
+        id: modules-cache
+        uses: actions/cache@f4b3439a656ba812b8cb417d2d49f9c810103092 # v3.4.0
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Install node_modules
+        if: steps.modules-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: npm ci
+
+      - name: TypeScript Test
+        run: npm run ts:test
+
+      - name: Next Build
+        run: npm run build
