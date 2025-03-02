@@ -1,4 +1,4 @@
-import { ComponentProps } from "react";
+import { ComponentProps, ReactNode } from "react";
 import buttonStyles from "./style.module.css";
 
 type ButtonProps = {
@@ -6,6 +6,7 @@ type ButtonProps = {
   variant?: "primary" | "secondary" | "tertiary";
   /** @default "button" */
   type?: ComponentProps<"button">["type"];
+  children: ReactNode;
 } & Omit<ComponentProps<"button">, "type" | "className">;
 
 export const Button: React.FC<ButtonProps> = ({

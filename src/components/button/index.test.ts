@@ -5,10 +5,6 @@ describe("Buttonコンポーネント", () => {
 });
 
 describe("Buttonメッセージ", () => {
-  describe("childrenが「何もない」場合", () => {
-    //buttonがwidthを持たないため
-    test.todo("ボタンが表示されないこと");
-  });
   describe("childrenが「登録」の場合", () => {
     test.todo("登録と表示されること");
   });
