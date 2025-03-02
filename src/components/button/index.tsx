@@ -1,4 +1,4 @@
-import { ComponentProps } from "react";
+import { ComponentProps, ReactNode } from "react";
 import buttonStyles from "./style.module.css";
 
 type ButtonProps = {
@@ -6,11 +6,13 @@ type ButtonProps = {
   variant?: "primary" | "secondary" | "tertiary";
   /** @default "button" */
   type?: ComponentProps<"button">["type"];
-} & Omit<ComponentProps<"button">, "type" | "className">;
+  children: ReactNode;
+} & Omit<ComponentProps<"button">, "type" | "className" | "children">;
 
 export const Button: React.FC<ButtonProps> = ({
   variant = "tertiary",
   type = "button",
+  children,
   ...props
 }) => {
   return (
@@ -19,7 +21,7 @@ export const Button: React.FC<ButtonProps> = ({
       type={type}
       className={`${buttonStyles.button} ${buttonStyles[variant]}`}
     >
-      {props.children}
+      {children}
     </button>
   );
 };
