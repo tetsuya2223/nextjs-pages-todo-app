@@ -1,5 +1,3 @@
-import "@testing-library/jest-dom";
-
 // import { Button } from "./index";
 
 describe("Buttonコンポーネント", () => {
