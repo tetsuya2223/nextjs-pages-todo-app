@@ -14,9 +14,8 @@ export const useFade = (isVisible: boolean, fadeDuration: number = 250) => {
     /** 非表示時の処理、アニメーション実行後dom破棄 */
     const time = fadeDuration ?? 250;
     const timer = window.setTimeout(() => setDisplay(isVisible), time);
-    console.log("isVisibleがfalse:", isVisible);
     return () => clearTimeout(timer);
-  }, [isVisible]);
+  }, [isVisible, fadeDuration]);
 
   return { display };
 };
