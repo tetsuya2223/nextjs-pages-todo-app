@@ -6,14 +6,15 @@ describe("Buttonコンポーネント", () => {
 
 describe("Buttonメッセージ", () => {
   describe("childrenが「何もない」場合", () => {
-    test.todo("ボタンが表示されるないこと");
+    //buttonがwidthを持たないため
+    test.todo("ボタンが表示されないこと");
   });
   describe("childrenが「登録」の場合", () => {
     test.todo("登録と表示されること");
   });
 });
 
-describe("button", () => {
+describe("buttonColor,buttonType", () => {
   describe("variant=primary, type=submitである場合", () => {
     test.todo("classNameがprimary、属性がsubmitであること");
   });
@@ -23,7 +24,10 @@ describe("button", () => {
   describe("variant=tertiary, type=submitである場合", () => {
     test.todo("classNameがtertiary、属性がsubmitであること");
   });
-  describe("何も指定しない場合", () => {
+  describe("variant=primary, typeを指定しない場合", () => {
+    test.todo("classNameがprimary、属性がbuttonであること");
+  });
+  describe("variantを指定しない、typeを指定しない場合", () => {
     test.todo("classNameがtertiary、属性がbuttonであること");
   });
 });
