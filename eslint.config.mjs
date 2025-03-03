@@ -14,6 +14,7 @@ const eslintConfig = [
   {
     rules: {
       "react-hooks/exhaustive-deps": "warn", // Hooks の deps に指定していない場合は Warning を指定する
+      "react/no-unescaped-entities": "warn", //(", ', <, > など) を適切にエスケープしないと警告が出る
     },
   },
 ];
