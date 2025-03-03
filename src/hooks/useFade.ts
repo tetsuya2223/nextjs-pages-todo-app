@@ -15,7 +15,7 @@ export const useFade = (isVisible: boolean, fadeDuration: number = 250) => {
     const time = fadeDuration ?? 250;
     const timer = window.setTimeout(() => setDisplay(isVisible), time);
     return () => clearTimeout(timer);
-  }, [isVisible, fadeDuration]);
+  }, [isVisible]);
 
   return { display };
 };
