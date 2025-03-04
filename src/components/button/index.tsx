@@ -9,6 +9,10 @@ type ButtonProps = {
   children: ReactNode;
 } & Omit<ComponentProps<"button">, "type" | "className" | "children">;
 
+// あえてエラーを出す。
+// TODO: エラー確認後削除
+const message: string = 123;
+
 export const Button: React.FC<ButtonProps> = ({
   variant = "tertiary",
   type = "button",
