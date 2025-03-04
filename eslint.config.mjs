@@ -11,13 +11,15 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends(
-    "next/core-web-vitals",
-    "next/typescript",
-    "plugin:storybook/recommended"
-  ),
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     plugins: { storybook },
+    files: ["**/*.stories.@(js|jsx|ts|tsx)"],
+    rules: {
+      "storybook/prefer-pascal-case": "error",
+    },
+  },
+  {
     rules: {
       "react-hooks/exhaustive-deps": "warn", // Hooks の deps に指定していない場合は Warning を指定する
       "react/no-unescaped-entities": "warn", //(", ', <, > など) を適切にエスケープしないと警告が出る
