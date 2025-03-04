@@ -1,1 +1,39 @@
-# //TODO:
+name: continuos Integration
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest #Ubuntuとはgithub-actionsの仮想環境
+
+    steps:
+      - name: Checkout Pushed Code on branch
+        uses: actions/checkout@v4 #リポジトリの最新のコードを取得(git cloneに相当)
+
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v4 # Node.jsの環境をセットアップ
+        with:
+          node-version: "20"
+
+      - name: Check if node_modules cache（after setup-node)
+        id: modules-cache
+        uses: actions/cache@v4
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('package-lock.json') }} #Node modulesをキャッシュする
+
+      - name: Install node_modules
+        if: steps.modules-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: npm ci #キャッシュが見つからなかった場合、Node modulesをインストールする
+
+        #todo: 必要？
+      - name: Run ESLint
+        run: npm run lint # ESLint を実行
+
+      - name: TypeScript Test
+        run: npm run ts:test #TypeScriptのtestを実施
+
+      - name: Next Build
+        run: npm run build #buildする
+
