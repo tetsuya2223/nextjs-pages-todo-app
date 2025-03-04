@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint-storybook": "npx eslint --print-config 'src/**/*.stories.@(js|jsx|ts|tsx)' | grep 'storybook/'",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
