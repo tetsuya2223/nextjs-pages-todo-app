@@ -18,7 +18,6 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^3.2.5",
     "@eslint/eslintrc": "^3",
     "@storybook/addon-essentials": "^8.6.3",
     "@storybook/addon-onboarding": "^8.6.3",
@@ -26,7 +25,6 @@
     "@storybook/experimental-addon-test": "^8.6.3",
     "@storybook/nextjs": "^8.6.3",
     "@storybook/react": "^8.6.3",
-    "@storybook/test": "^8.6.3",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^14.6.1",
