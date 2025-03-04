@@ -11,13 +11,16 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...compat.extends(
+    "next/core-web-vitals",
+    "next/typescript",
+    "plugin:storybook/recommended"
+  ),
   {
     plugins: { storybook },
     rules: {
       "react-hooks/exhaustive-deps": "warn", // Hooks の deps に指定していない場合は Warning を指定する
       "react/no-unescaped-entities": "warn", //(", ', <, > など) を適切にエスケープしないと警告が出る
-      ...storybook.configs.recommended.rules, //ストーリーブック用のesLintの設定
     },
   },
 ];
