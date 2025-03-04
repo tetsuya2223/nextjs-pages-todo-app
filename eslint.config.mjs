@@ -10,13 +10,20 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
+const flatRecommendedRules = Object.assign(
+  {},
+  ...storybook.configs["flat/recommended"].map((config) => config.rules ?? {})
+);
+
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     plugins: { storybook },
+  },
+  {
     files: ["**/*.stories.@(js|jsx|ts|tsx)"],
     rules: {
-      "storybook/prefer-pascal-case": "error",
+      ...flatRecommendedRules,
     },
   },
   {
