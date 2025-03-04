@@ -27,7 +27,6 @@ jobs:
         shell: bash
         run: npm ci #キャッシュが見つからなかった場合、Node modulesをインストールする
 
-        #todo: 必要？
       - name: Run ESLint
         run: npm run lint # ESLint を実行
 
